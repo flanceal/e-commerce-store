@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block css %}
-    <link href="{% static '/static/vendor/css/products.css'%}" rel="stylesheet">
+    <link href="{% static '/vendor/css/products.css'%}" rel="stylesheet">
 
 {% endblock %}
 
@@ -16,11 +16,9 @@
 
             <h1 class="my-4">Store</h1>
             <div class="list-group">
-                <a href="#" class="list-group-item">New</a>
-                <a href="#" class="list-group-item">Cloth</a>
-                <a href="#" class="list-group-item">Shoes</a>
-                <a href="#" class="list-group-item">Accessories</a>
-                <a href="#" class="list-group-item">Gifts</a>
+                {% for category in categories %}
+                <a href="#" class="list-group-item">{{ category }}</a>
+                {% endfor %}
             </div>
 
         </div>
@@ -36,13 +34,13 @@
                 </ol>
                 <div class="carousel-inner" role="listbox">
                     <div class="carousel-item active">
-                        <img class="d-block img-fluid" src="static/static//img/slides/slide-1.jpg" alt="First slide">
+                        <img class="d-block img-fluid" src="/slides/slide-1.jpg" alt="First slide">
                     </div>
                     <div class="carousel-item">
-                        <img class="d-block img-fluid" src="/static/vendor/img/slides/slide-2.jpg" alt="Second slide">
+                        <img class="d-block img-fluid" src="/slides/slide-2.jpg" alt="Second slide">
                     </div>
                     <div class="carousel-item">
-                        <img class="d-block img-fluid" src="/static/vendor/img/slides/slide-3.jpg" alt="Third slide">
+                        <img class="d-block img-fluid" src="/slides/slide-3.jpg" alt="Third slide">
                     </div>
                 </div>
                 <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -57,128 +55,27 @@
 
             <div class="row">
 
+                {% for product in products %}
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="card h-100">
                         <a href="#">
                             <img class="card-img-top"
-                                 src="/static/vendor/img/products/Adidas-hoodie.png"
+                                 src="{{ product.image.url  }}"
                                  alt="">
                         </a>
                         <div class="card-body">
                             <h4 class="card-title">
-                                <a href="#">Adidas Originals Black Monogram Hoodie</a>
+                                <a href="#">{{ product.name }}</a>
                             </h4>
-                            <h5>6 090,00 руб.</h5>
-                            <p class="card-text">Soft fabric for sweatshirts. Style and comfort is a way of life.</p>
+                            <h5> {{ product.price }}$</h5>
+                            <p class="card-text">{{ product.description }}</p>
                         </div>
                         <div class="card-footer text-center">
                             <button type="button" class="btn btn-outline-success">Send to cart</button>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100">
-                        <a href="#">
-                            <img class="card-img-top"
-                                 src="/static/vendor/img/products/Blue-jacket-The-North-Face.png" alt="">
-                        </a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                <a href="#">The North Face blue jacket</a>
-                            </h4>
-                            <h5>23 725,00 руб.</h5>
-                            <p class="card-text">
-                                Smooth fabric. Waterproof coating. Lightweight and warm down fill.
-                            </p>
-                        </div>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-outline-success">Send to cart</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100">
-                        <a href="#">
-                            <img class="card-img-top"
-                                 src="/static/vendor/img/products/Brown-sports-oversized-top-ASOS-DESIGN.png"
-                                 alt="">
-                        </a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                <a href="#">ASOS DESIGN oversized sports top in brown</a>
-                            </h4>
-                            <h5>3 390,00 руб.</h5>
-                            <p class="card-text">Plush material. Comfortable and soft.</p>
-                        </div>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-outline-success">Send to cart</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100">
-                        <a href="#">
-                            <img class="card-img-top"
-                                 src="/static/vendor/img/products/Black-Nike-Heritage-backpack.png"
-                                 alt="">
-                        </a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                <a href="#">Nike Black Heritage Backpack</a>
-                            </h4>
-                            <h5>2 340,00 руб.</h5>
-                            <p class="card-text">Thick fabric. Lightweight material.</p>
-                        </div>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-outline-success">Send to cart</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100">
-                        <a href="#">
-                            <img class="card-img-top"
-                                 src="/static/vendor/img/products/Black-Dr-Martens-shoes.png"
-                                 alt="">
-                        </a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                <a href="#">Dr Martens 1461 Bex Black 3-Eye Platform Shoes</a>
-                            </h4>
-                            <h5>13 590,00 руб.</h5>
-                            <p class="card-text">Smooth leather upper. natural material.</p>
-                        </div>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-outline-success">Send to cart</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100">
-                        <a href="#">
-                            <img class="card-img-top"
-                                 src="/static/vendor/img/products/Dark-blue-wide-leg-ASOs-DESIGN-trousers.png"
-                                 alt="">
-                        </a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                <a href="#">ASOS DESIGN wide leg tailored trousers in navy</a>
-                            </h4>
-                            <h5>2 890,00 руб.</h5>
-                            <p class="card-text">Lightweight stretch seersucker fabric Textured fabric.</p>
-                        </div>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-outline-success">Send to cart</button>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+                {% endfor %}
 
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
