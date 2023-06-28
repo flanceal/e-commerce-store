@@ -11,4 +11,3 @@ media/
 settings_local.py
 
 # Ignore the .vscode folder
-.vscode/
