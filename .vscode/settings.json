@@ -1,0 +1,5 @@
+{
+      "python.linting.pylintEnabled": true,
+      "python.linting.pylintCategorySeverity.convention": "Hint",
+      "python.linting.pycodestyleEnabled": true
+}
