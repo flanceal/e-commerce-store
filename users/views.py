@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponseRedirect
+from django.shortcuts import render, redirect
 from .models import User
 from .form import UserLoginForm, UserRegistrationForm
 from django.contrib import auth
@@ -14,7 +14,7 @@ def login(request):
             user = auth.authenticate(username=username, password=password)
             if user:
                 auth.login(request, user)
-                return HttpResponseRedirect(reverse('index'))
+                return redirect("index")
     else:
         form = UserLoginForm()
     context = {'form': form}
@@ -26,7 +26,7 @@ def registration(request):
         form = UserRegistrationForm(data=request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('users:login'))
+            return redirect(redirect('users:login'))
     form = UserRegistrationForm()
     context = {'form': form}
     return render(request, 'users/registration.html', context)
