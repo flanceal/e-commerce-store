@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Store</title>
+    {% block title %}<title>Store</title>{% endblock %}
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
@@ -48,7 +48,9 @@
                             <a class="dropdown-item" href="{% url 'users:profile' %}">Profile</a>
                         </li>
                         <li><a class="dropdown-item" href="orders/orders.html">Orders</a></li>
-                        <li><a class="dropdown-item" href="#">Admin-panel</a></li>
+                        {% if user.is_superuser or user.is_staff  %}
+                        <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin-panel</a></li>
+                        {%  endif %}
                         <li>
                             <hr class="dropdown-divider">
                         </li>
