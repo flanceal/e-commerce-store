@@ -17,7 +17,7 @@
             <h1 class="my-4">Store</h1>
             <div class="list-group">
                 {% for category in categories %}
-                <a href="#" class="list-group-item">{{ category }}</a>
+                <a href="{% url 'products:category' category.id %}" class="list-group-item">{{ category }}</a>
                 {% endfor %}
             </div>
 
@@ -55,7 +55,7 @@
 
             <div class="row">
 
-                {% for product in products %}
+                {% for product in page_obj %}
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="card h-100">
                         <a href="#">
@@ -78,7 +78,6 @@
                     </div>
                 </div>
                 {% endfor %}
-
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
                     <li class="page-item disabled">
@@ -92,7 +91,6 @@
                     </li>
                 </ul>
             </nav>
-
         </div>
 
     </div>

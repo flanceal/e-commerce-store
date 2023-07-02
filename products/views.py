@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponseRedirect
 from .models import Product, ProductCategory, Basket
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 
 # Create your views here.
@@ -8,12 +9,16 @@ def index(request):
     return render(request, 'products/index.html')
 
 
-def products(request):
+def products(request, category_id=None):
+    products = Product.objects.filter(category_id=category_id) if category_id else Product.objects.all()
+    paginator = Paginator(products, 6)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     context = {
         'categories': ProductCategory.objects.all(),
-        'products': Product.objects.all()
+        'page_obj': page_obj
     }
-
     return render(request, 'products/products.html', context)
 
 
@@ -35,5 +40,6 @@ def basket_remove(request, basket_id):
     basket = Basket.objects.get(id=basket_id)
     basket.delete()
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
 
 
