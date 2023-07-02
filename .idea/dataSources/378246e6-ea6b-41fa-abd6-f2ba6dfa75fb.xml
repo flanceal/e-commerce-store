@@ -4,21 +4,21 @@
     <root id="1">
       <ServerVersion>15.2</ServerVersion>
     </root>
-    <database id="2" parent="1" name="books_database"/>
+    <database id="2" parent="1" name="postgres"/>
     <database id="3" parent="1" name="danilfartanov"/>
-    <database id="4" parent="1" name="ecommerce_store">
-      <Current>1</Current>
-    </database>
-    <database id="5" parent="1" name="hello_world"/>
+    <database id="4" parent="1" name="template1"/>
+    <database id="5" parent="1" name="template0"/>
     <database id="6" parent="1" name="job_board"/>
     <database id="7" parent="1" name="movies_db"/>
-    <database id="8" parent="1" name="postgres"/>
-    <database id="9" parent="1" name="review_db"/>
-    <database id="10" parent="1" name="template0"/>
-    <database id="11" parent="1" name="template1"/>
-    <schema id="12" parent="4" name="information_schema"/>
-    <schema id="13" parent="4" name="pg_catalog"/>
-    <schema id="14" parent="4" name="public">
+    <database id="8" parent="1" name="hello_world"/>
+    <database id="9" parent="1" name="books_database"/>
+    <database id="10" parent="1" name="review_db"/>
+    <database id="11" parent="1" name="ecommerce_store">
+      <Current>1</Current>
+    </database>
+    <schema id="12" parent="11" name="information_schema"/>
+    <schema id="13" parent="11" name="pg_catalog"/>
+    <schema id="14" parent="11" name="public">
       <Current>1</Current>
     </schema>
   </database-model>

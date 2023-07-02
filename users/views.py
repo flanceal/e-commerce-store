@@ -3,6 +3,8 @@ from .models import User
 from .form import UserLoginForm, UserRegistrationForm, UserProfileForm
 from django.contrib import auth, messages
 from django.contrib.auth.forms import PasswordChangeForm
+from products.models import Basket
+from django.db.models import Sum
 
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -51,7 +53,13 @@ def profile(request):
             print(form.errors)
     else:
         form = UserProfileForm(instance=request.user)
-    context = {'title': 'Your profile',  "form": form}
+
+    baskets = Basket.objects.all().filter(user=request.user)
+
+    context = {'title': 'Your profile',
+               "form": form,
+               'baskets': baskets
+               }
     return render(request, 'users/profile.html', context)
 
 
