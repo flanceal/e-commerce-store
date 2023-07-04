@@ -1,5 +1,17 @@
 {
-      "python.linting.pylintEnabled": true,
-      "python.linting.pylintCategorySeverity.convention": "Hint",
-      "python.linting.pycodestyleEnabled": true
-}
+      "python.autoComplete.addBrackets": true,
+      "python.autoComplete.addCallParenthesis": true,
+      "python.analysis.extraPaths": [
+          "${workspaceFolder}"
+      ],
+      "python.analysis.autoSearchPaths": true,
+      "python.analysis.typeCheckingMode": "off",
+      "python.linting.enabled": true,
+      "python.linting.pylintEnabled": false,
+      "python.linting.flake8Enabled": true,
+      "python.linting.flake8Args": [
+          "--ignore=E501",  // Ignore line length warnings
+          "--exclude=*/migrations/*"  // Exclude migrations directory from linting
+      ]
+  }
+  
