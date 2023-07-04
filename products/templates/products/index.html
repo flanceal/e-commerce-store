@@ -1,6 +1,10 @@
 {% extends 'products/base.html' %}
 {% load static %}
 
+{% block title %}
+    {{ title }}
+{% endblock %}
+
 {% block css %}
     <link href="{% static '/vendor/css/index.css'%}" rel="stylesheet">
 {% endblock %}
