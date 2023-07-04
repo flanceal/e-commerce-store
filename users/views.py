@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import User
+from .models import User, EmailVerification
 from .form import UserLoginForm, UserRegistrationForm, UserProfileForm
 from django.contrib import auth, messages
 from django.contrib.auth.forms import PasswordChangeForm
@@ -7,6 +7,7 @@ from products.models import Basket
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 from common.view import TitleMixin
+from django.views.generic.base import TemplateView
 
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
@@ -62,4 +63,21 @@ class UserPasswordChangeView(TitleMixin, SuccessMessageMixin,PasswordChangeView)
 
     def get_success_url(self):
         return reverse_lazy('users:profile', args=[self.request.user.id])
+
+
+class EmailVerificationView(TitleMixin, TemplateView):
+    title = 'Store - Email verification'
+    template_name = 'users/email_verification.html'
+
+    def get(self, request, *args, **kwargs):
+        code = kwargs['code']
+        user = User.objects.get(email=kwargs['email'])
+        email_verifications = EmailVerification.objects.filter(user=user, code=code)
+        if email_verifications.exists() and not email_verifications.first().is_expired():
+            user.is_verified_email = True
+            user.save()
+            return super(EmailVerificationView, self).get(request, *args, **kwargs)
+        else:
+            return redirect('index')
+
 
