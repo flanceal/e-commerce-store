@@ -1,22 +1,20 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from .models import User, EmailVerification
 from .form import UserLoginForm, UserRegistrationForm, UserProfileForm
-from django.contrib import auth, messages
-from django.contrib.auth.forms import PasswordChangeForm
 from products.models import Basket
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 from common.view import TitleMixin
 from django.views.generic.base import TemplateView
 
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 
 
 class UserLoginView(TitleMixin, SuccessMessageMixin, LoginView):
     form_class = UserLoginForm
     template_name = 'users/login.html'
-    success_message = f"Welcome back"
+    success_message = "Welcome back"
     title = 'Store - Login'
 
     def get_success_url(self):
@@ -28,7 +26,7 @@ class UserRegistrationView(TitleMixin, SuccessMessageMixin, CreateView):
     form_class = UserRegistrationForm
     template_name = 'users/registration.html'
     success_url = reverse_lazy('users:login')
-    success_message = f"Registration completed successfully"
+    success_message = "Registration completed successfully"
     title = 'Store - Registration'
 
     def get_context_data(self, **kwargs):
@@ -56,7 +54,7 @@ class UserLogoutView(LogoutView):
     next_page = reverse_lazy('index')
 
 
-class UserPasswordChangeView(TitleMixin, SuccessMessageMixin,PasswordChangeView):
+class UserPasswordChangeView(TitleMixin, SuccessMessageMixin, PasswordChangeView):
     template_name = 'users/change_password.html'
     success_message = 'The password has changed successfully'
     title = 'Store - Password'
@@ -79,5 +77,3 @@ class EmailVerificationView(TitleMixin, TemplateView):
             return super(EmailVerificationView, self).get(request, *args, **kwargs)
         else:
             return redirect('index')
-
-

@@ -69,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'products.context_processors.baskets'
             ],
         },
     },
@@ -159,5 +160,3 @@ EMAIL_HOST_USER = 'flanceal.store@gmail.com'
 EMAIL_HOST_PASSWORD = 'ejzbxnesynrcemuw'
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
-

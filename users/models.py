@@ -24,7 +24,7 @@ class EmailVerification(models.Model):
     def send_verification_email(self):
         link = reverse('users:email-verification', kwargs={'email': self.user.email, 'code': self.code})
         verification_link = f"{settings.DOMAIN_NAME}{link}"
-        subject = f"Please complete the email verification process"
+        subject = "Please complete the email verification process"
         message = f"{self.user.username}, Please verify your email to complete the registration process." \
                   f"Click on the link provided in the email to verify your account\n{verification_link}"
 
@@ -38,6 +38,3 @@ class EmailVerification(models.Model):
 
     def is_expired(self):
         return now() >= self.expiration
-
-
-

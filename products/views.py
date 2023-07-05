@@ -1,10 +1,10 @@
-from django.shortcuts import render, HttpResponseRedirect
+from django.shortcuts import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.views.generic.base import TemplateView
 from django.views.generic.list import ListView
 from common.view import TitleMixin
 
-from .models import Product, ProductCategory, Basket
+from .models import Product, Basket
 
 
 # Create your views here.
@@ -27,12 +27,6 @@ class ProductListView(TitleMixin, ListView):
         else:
             return queryset
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(**kwargs).get_context_data()
-        context['title'] = 'Store - catalog'
-        context['categories'] = ProductCategory.objects.all()
-        return context
-
 
 @login_required(login_url='users:login')
 def basket_add(request, product_id):
@@ -53,6 +47,3 @@ def basket_remove(request, basket_id):
     basket = Basket.objects.get(id=basket_id)
     basket.delete()
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
-
-
-
