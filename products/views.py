@@ -5,7 +5,7 @@ from django.views.generic.list import ListView
 
 from common.view import TitleMixin
 
-from .models import Basket, Product
+from .models import Basket, Product, ProductCategory
 
 
 # Create your views here.
@@ -27,6 +27,11 @@ class ProductListView(TitleMixin, ListView):
             return queryset.filter(category_id=category_id)
         else:
             return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(ProductListView, self).get_context_data()
+        context['categories'] = ProductCategory.objects.all()
+        return context
 
 
 @login_required(login_url='users:login')

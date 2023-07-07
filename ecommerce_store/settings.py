@@ -175,7 +175,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-SITE_ID = 7
+SITE_ID = 1
 
 SOCIALACCOUNT_PROVIDERS = {
     'github': {
@@ -184,3 +184,5 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
     }
 }
+
+LOGIN_REDIRECT_URL = '/'
