@@ -14,8 +14,8 @@ class UserRegistrationViewTestCase(TestCase):
     def setUp(self) -> None:
         self.path = reverse('users:registration')
         self.data = {
-            'first_name': 'Danil', 'last_name': 'Fartanov',
-            'username': 'fortflint', 'email': 'fortflint@gmail.com',
+            'first_name': 'FirstName', 'last_name': 'LastName',
+            'username': 'check', 'email': 'fortflint@gmail.com',
             'password1': 'checkpassword', 'password2': 'checkpassword'
         }
 
@@ -69,6 +69,10 @@ class UserLoginTestCase(TestCase):
             'password': 'wrong_password'
         }
 
+    def _create_user(self):
+        hashed_password = make_password(self.login_data['password'])
+        User.objects.create(username=self.login_data['username'], password=hashed_password)
+
     def test_login_get(self):
         response = self.client.get(self.path)
         self.assertEquals(response.status_code, HTTPStatus.OK)
@@ -77,8 +81,7 @@ class UserLoginTestCase(TestCase):
     def test_login_post_successful(self):
 
         # creating object in User table
-        hashed_password = make_password(self.login_data['password'])
-        User.objects.create(username=self.login_data['username'], password=hashed_password)
+        self._create_user()
 
         # login with that data
         response = self.client.post(self.path, self.login_data)
@@ -90,8 +93,7 @@ class UserLoginTestCase(TestCase):
     def test_login_post_errors(self):
 
         # creating object in User table
-        hashed_password = make_password(self.login_data['password'])
-        User.objects.create(username=self.login_data['username'], password=hashed_password)
+        self._create_user()
 
         # login with that data
         response = self.client.post(self.path, self.wrong_login_data)
@@ -99,3 +101,52 @@ class UserLoginTestCase(TestCase):
         # testing errors
         self.assertEquals(response.status_code, HTTPStatus.OK)
         self.assertContains(response, "Please enter a correct username and password")
+
+
+class UserProfileTestCase(TestCase):
+
+    def setUp(self) -> None:
+        self.data = {
+            'first_name': 'FirstName', 'last_name': 'LastName',
+            'username': 'check', 'email': 'fortflint@gmail.com',
+            'password': 'checkpassword'
+        }
+
+    def _create_user(self):
+        hashed_password = make_password(self.data['password'])
+        User.objects.create(
+            first_name=self.data['first_name'], last_name=self.data['last_name'],
+            username=self.data['username'], email=self.data['email'],
+            password=hashed_password)
+
+    def _login_into_account(self):
+        login_page = reverse('users:login')
+        self.client.post(login_page, data={
+            'username': self.data['username'],
+            'password': self.data['password']
+        })
+
+    @staticmethod
+    def _get_profile_path():
+        return reverse('users:profile', args=[User.objects.last().id])
+
+    def test_user_profile_get(self):
+        self._create_user()
+        self._login_into_account()
+        # check profile data
+        response = self.client.get(self._get_profile_path())
+        # extracting initial data in forms
+        user_profile_data = response.context_data['form'].initial
+        del user_profile_data['image']
+        self.assertTrue(set(user_profile_data.items()).issubset(set(self.data.items())))
+
+    def test_user_profile_data_change(self):
+        self._create_user()
+        self._login_into_account()
+        # checking changes in user profile
+        response = self.client.post(self._get_profile_path(), {'first_name': "NewFirstName"})
+        new_user_data_displayed = response.context_data['form'].initial
+        new_db_user_data = response.context_data['user']
+        self.assertEquals(response.status_code, HTTPStatus.OK)
+        self.assertEquals(new_user_data_displayed['first_name'], "NewFirstName")
+        self.assertEquals(new_db_user_data.first_name, "NewFirstName")
