@@ -43,7 +43,7 @@ class UserProfileView(TitleMixin, SuccessMessageMixin, UpdateView):
     title = 'Store - Profile'
 
     def get_success_url(self):
-        return reverse_lazy('users:profile', args=[self.object.id])
+        return reverse_lazy('users:profile', args = [self.object.id])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
