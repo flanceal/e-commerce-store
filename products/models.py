@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 
 from users.models import User
 
@@ -41,7 +42,6 @@ class Basket(models.Model):
     product = models.ForeignKey(to=Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0)
     created_timestamp = models.DateTimeField(auto_now_add=True)
-
     objects = BasketsQuerySet.as_manager()
 
     def __str__(self):
@@ -49,3 +49,4 @@ class Basket(models.Model):
 
     def sum(self):
         return self.product.price * self.quantity
+
