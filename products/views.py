@@ -34,6 +34,12 @@ class ProductListView(TitleMixin, ListView):
         return context
 
 
+class ProductView(TitleMixin, TemplateView):
+    model = Product
+    template_name = "products/one_product.html"
+
+
+
 @login_required(login_url='users:login')
 def basket_add(request, product_id):
     product = Product.objects.get(id=product_id)
