@@ -1,0 +1,48 @@
+.card {
+    margin-bottom: 20px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-footer {
+    padding: 10px;
+}
+
+.card-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.card-text {
+    font-size: 16px;
+}
+
+.text-muted {
+    font-size: 12px;
+}
+
+.btn {
+    font-size: 16px;
+    padding: 10px 20px;
+}
+
+.card {
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+}
+
+.card-header {
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+}
+
+.card-body {
+    background-color: #fff;
+}
+
+.card-footer {
+    background-color: #f8f8f8;
+    border-top: 1px solid #ddd;
+}

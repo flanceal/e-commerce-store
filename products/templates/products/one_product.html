@@ -5,30 +5,30 @@
     {{ title }}
 {% endblock %}
 
-{#{% block css %}#}
-{#    {{ None }}#}
-{#{% endblock %}#}
+{% block css %}
+    <link rel="stylesheet" href="{% static '/vendor/css/product_info.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="container">
-
+<div class="container mt-4">
     <div class="row">
-
         <div class="col-lg-12">
-
             <div class="card mt-4">
-                <img class="card-img-top"
-                     src="vendor/img/products/Adidas-hoodie.png"
-                     alt="">
                 <div class="card-body">
-                    <h3 class="card-title">Hoodie with adidas Originals Monograms</h3>
-                    <h4>Price: $99.99</h4>
-                    <p class="card-text">Soft fabric for sweatshirts. Style and comfort are a way of life.</p>
-                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente dicta fugit
-                        fugiat hic aliquam itaque facere, soluta. Totam id doloremque explicabo
-                        repudiandae.</p>
-                    <span class="text-warning">&#9733; &#9733; &#9733; &#9733; &#9734;</span>
-                    4.0 stars
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img class="card-img-top"
+                                 src="{{ product.image.url }}"
+                                 alt="">
+                        </div>
+                        <div class="col-md-8">
+                            <h3 class="card-title">{{ product.name }}</h3>
+                            <h4>Price: ${{ product.price }}</h4>
+                            <p class="card-text">{{ product.description }}</p>
+{#                            <span class="text-warning">&#9733; &#9733; &#9733; &#9733; &#9734;</span>#}
+{#                            4.0 stars#}
+                        </div>
+                    </div>
                 </div>
                 <div class="card-footer">
                     <button type="button" class="btn btn-outline-success">Add to Cart</button>
