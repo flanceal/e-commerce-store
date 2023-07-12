@@ -8,7 +8,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from common.view import TitleMixin
 from products.models import Basket
 
-from .form import UserLoginForm, UserProfileForm, UserRegistrationForm
+from .forms import UserLoginForm, UserProfileForm, UserRegistrationForm
 from .models import EmailVerification, User
 
 
@@ -35,6 +35,11 @@ class UserRegistrationView(TitleMixin, SuccessMessageMixin, CreateView):
         return context
 
 
+def _get_form(request, formcls, prefix):
+    data = request.POST if prefix in request.POST else None
+    return formcls(data, prefix=prefix)
+
+
 class UserProfileView(TitleMixin, SuccessMessageMixin, UpdateView):
     model = User
     form_class = UserProfileForm
@@ -43,7 +48,7 @@ class UserProfileView(TitleMixin, SuccessMessageMixin, UpdateView):
     title = 'Store - Profile'
 
     def get_success_url(self):
-        return reverse_lazy('users:profile', args = [self.object.id])
+        return reverse_lazy('users:profile', args=[self.object.id])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()

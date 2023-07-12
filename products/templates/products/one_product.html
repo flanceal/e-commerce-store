@@ -31,7 +31,9 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button type="button" class="btn btn-outline-success">Add to Cart</button>
+                    <a href="{% url 'products:basket-add' product.id%}">
+                        <button type="button" class="btn btn-outline-success">Send to Cart</button>
+                    </a>
                 </div>
             </div>
             <!-- /.card -->

@@ -1,8 +1,7 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import HttpResponseRedirect, redirect
+from django.shortcuts import HttpResponseRedirect
 from django.views.generic.base import TemplateView
 from django.views.generic.list import ListView
-from django.urls import reverse
 
 from common.view import TitleMixin
 
@@ -37,7 +36,6 @@ class ProductListView(TitleMixin, ListView):
 
 class ProductView(TitleMixin, TemplateView):
     model = Product
-    title = 'Product'
     template_name = "products/one_product.html"
 
     def get_context_data(self, **kwargs):
