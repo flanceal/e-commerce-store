@@ -11,9 +11,10 @@
     {% for basket in baskets %}
         <div class="card mb-3">
                 <div class="card-body">
-                    <h5 class="card-title">{{ basket.product.name }}</h5>
+                    <a href="{% url 'products:product-info' basket.product.slug %}"><h5 class="card-title">{{ basket.product.name }}</h5></a>
                     <p class="card-text">{{ basket.product.description }}</p>
                 </div>
+                <form action=""></form>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item bg-light">
                         <div class="row text-center">
@@ -51,5 +52,4 @@
         </div>
     </div>
 {% endif %}
-
 
