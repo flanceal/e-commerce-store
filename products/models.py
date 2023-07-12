@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils.text import slugify
 
 from users.models import User
@@ -24,9 +25,18 @@ class Product(models.Model):
     quantity = models.PositiveIntegerField(default=0)
     image = models.ImageField(upload_to='product_images')
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
+    slug = models.SlugField(max_length=255, unique=True, default=None, null=True)
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        return super().save(*args, **kwargs)
+
+    def get_url(self):
+        return reverse("products:product-info", kwargs={"product_slug": self.slug})
 
 
 class BasketsQuerySet(models.QuerySet):
