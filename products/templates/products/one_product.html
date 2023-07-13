@@ -25,8 +25,6 @@
                             <h3 class="card-title">{{ product.name }}</h3>
                             <h4>Price: ${{ product.price }}</h4>
                             <p class="card-text">{{ product.description }}</p>
-{#                            <span class="text-warning">&#9733; &#9733; &#9733; &#9733; &#9734;</span>#}
-{#                            4.0 stars#}
                         </div>
                     </div>
                 </div>
@@ -43,22 +41,16 @@
                     Product Reviews
                 </div>
                 <div class="card-body">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore,
-                        similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat
-                        laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
-                    <small class="text-muted">Posted by Anonymous on 3/1/21</small>
-                    <hr>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore,
-                        similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat
-                        laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
-                    <small class="text-muted">Posted by Anonymous on 3/1/21</small>
-                    <hr>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore,
-                        similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat
-                        laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
-                    <small class="text-muted">Posted by Anonymous on 3/1/21</small>
-                    <hr>
-                    <a href="#" class="btn btn-success">Leave a Review</a>
+                    {% if not reviews %}
+                        <h4>No reviews yet</h4>
+                    {% else %}
+                        {% for review in reviews %}
+                            <p> {{ review.review }}</p>
+                            <small class="text-muted">Posted by {{ reviews.username }} on {{ review.created_timestamp }}</small>
+                            <hr>
+                        {% endfor %}
+                    {% endif %}
+                    <button class="btn btn-success" data-toggle="modal" data-target="#reviewModal">Leave a Review</button>
                 </div>
             </div>
             <!-- /.card -->
@@ -70,12 +62,38 @@
     <!-- /.row -->
 
 </div>
+
+<!-- Review Modal -->
+<div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reviewModalLabel">Leave a Review</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="reviewForm" action="{% url 'products:product-info' product.slug %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="reviewText">Review Text</label>
+                        <textarea class="form-control" id="reviewText" name="review" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.modal -->
+
 {% endblock %}
 
 {% block footer %}
 <footer class="py-5 bg-dark">
     <div class="container">
-        <p class="m-0 text-center text-white">Copyright &copy; Store 2023</p>
+        <p class="m-0 text-center text-white">&copy; Store 2023</p>
     </div>
     <!-- /.container -->
 </footer>

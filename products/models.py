@@ -59,3 +59,13 @@ class Basket(models.Model):
 
     def sum(self):
         return self.product.price * self.quantity
+
+
+class Review(models.Model):
+    product = models.ForeignKey(to=Product, on_delete=models.CASCADE)
+    username = models.CharField(max_length=100, default='Anonymous')
+    review = models.CharField(max_length=300)
+    created_timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Review about {self.product.name} from {self.username}"
