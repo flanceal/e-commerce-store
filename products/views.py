@@ -1,11 +1,14 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import HttpResponseRedirect
 from django.views.generic.base import TemplateView
+from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
+from django.urls import reverse_lazy, reverse
 
 from common.view import TitleMixin
 
-from .models import Basket, Product, ProductCategory
+from .models import Basket, Product, ProductCategory, Review
+from .forms import ReviewForm
 
 
 # Create your views here.
@@ -34,15 +37,29 @@ class ProductListView(TitleMixin, ListView):
         return context
 
 
-class ProductView(TitleMixin, TemplateView):
-    model = Product
+class ProductView(TitleMixin, FormView):
     template_name = "products/one_product.html"
+    form_class = ReviewForm
+    success_url = reverse_lazy('products:product-info')
 
     def get_context_data(self, **kwargs):
         context = super(ProductView, self).get_context_data()
         slug = self.kwargs.get('product_slug')
         context['product'] = Product.objects.get(slug=slug)
+        context['reviews'] = Review.objects.filter(product=context['product'])
         return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        product = context['product']
+
+        review = Review(
+            product=product,
+            review=form.cleaned_data['review'],
+            users=self.request.user
+        )
+        review.save()
+        return HttpResponseRedirect(reverse('products:product-info', args=[product.slug]))
 
 
 @login_required(login_url='users:login')
