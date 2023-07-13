@@ -46,7 +46,7 @@
                     {% else %}
                         {% for review in reviews %}
                             <p> {{ review.review }}</p>
-                            <small class="text-muted">Posted by {{ reviews.username }} on {{ review.created_timestamp }}</small>
+                            <small class="text-muted">Posted by {{ review.username }} on {{ review.created_timestamp.date }}</small>
                             <hr>
                         {% endfor %}
                     {% endif %}
@@ -74,7 +74,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="reviewForm" action="{% url 'products:product-info' product.slug %}" method="post">
+                <form id="reviewForm" action="{% url 'products:product-info' product.slug %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="reviewText">Review Text</label>

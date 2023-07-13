@@ -43,7 +43,7 @@ class ProductView(TitleMixin, FormView):
     success_url = reverse_lazy('products:product-info')
 
     def get_context_data(self, **kwargs):
-        context = super(ProductView, self).get_context_data()
+        context = super().get_context_data()
         slug = self.kwargs.get('product_slug')
         context['product'] = Product.objects.get(slug=slug)
         context['reviews'] = Review.objects.filter(product=context['product'])
@@ -56,7 +56,7 @@ class ProductView(TitleMixin, FormView):
         review = Review(
             product=product,
             review=form.cleaned_data['review'],
-            users=self.request.user
+            username=self.request.user.username
         )
         review.save()
         return HttpResponseRedirect(reverse('products:product-info', args=[product.slug]))
