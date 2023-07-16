@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView
+from django.contrib import messages
 
 from common.view import TitleMixin
 from products.models import Basket
@@ -21,13 +22,22 @@ class UserLoginView(TitleMixin, SuccessMessageMixin, LoginView):
     def get_success_url(self):
         return reverse_lazy('index')
 
+    def form_valid(self, form):
+        username = form.cleaned_data['username']
+        user = User.objects.get(username=username)
+        if not user.is_verified_email:
+            messages.error(self.request, "Please verify your email before logging in.")
+            return self.form_invalid(form)
+
+        return super().form_valid(form)
+
 
 class UserRegistrationView(TitleMixin, SuccessMessageMixin, CreateView):
     model = User
     form_class = UserRegistrationForm
     template_name = 'users/registration.html'
     success_url = reverse_lazy('users:login')
-    success_message = "Registration completed successfully"
+    success_message = "Registration completed successfully. Please confirm your email"
     title = 'Store - Registration'
 
     def get_context_data(self, **kwargs):
