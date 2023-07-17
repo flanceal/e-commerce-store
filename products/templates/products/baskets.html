@@ -39,7 +39,7 @@
                     <h4 class="float-right">{{ baskets.total_sum }}$</h4>
                 </div>
             </div>
-        <a class="btn btn-success btn-lg float-right" href="../orders/order-create.html">Checkout</a>
+        <a class="btn btn-success btn-lg float-right" href="{% url 'orders:check-out' %}">Checkout</a>
     </div>
 {% else %}
     <div class="container mt-5">
