@@ -1,0 +1,55 @@
+{% extends 'products/base.html' %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block content %}
+    <section>
+        <div class="container pt-5">
+            <div class="text-center mt-5">
+                <h1>Orders</h1>
+                <div class="orders mt-5">
+                    <table class="table">
+                        <thead>
+                            <tr class="table-light">
+                                <th scope="col">#</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Created</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Paid</td>
+                                <td>Aug 21, 2021</td>
+                                <td>$5,070</td>
+                                <td>
+                                    <a href="{% url 'orders:order-info' %}">View</a>
+                                </td>
+                            </tr>
+                            <tr class="table-success">
+                                <th scope="row">2</th>
+                                <td>Delivered</td>
+                                <td>Jul 16, 2021</td>
+                                <td>$4,876</td>
+                                <td>
+                                    <a href="order.html">View</a>
+                                </td>
+                            </tr>
+                            <tr class="table-info">
+                                <th scope="row">3</th>
+                                <td>In Transit</td>
+                                <td>Nov 14, 2021</td>
+                                <td>$9,566</td>
+                                <td>
+                                    <a href="order.html">View</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
