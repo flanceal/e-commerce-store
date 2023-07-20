@@ -1,4 +1,5 @@
 {% extends 'products/base.html' %}
+{% load humanize %}
 
 {% block title %} {{ title }} {% endblock %}
 
@@ -19,33 +20,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Paid</td>
-                                <td>Aug 21, 2021</td>
-                                <td>$5,070</td>
+                        {% for order in orders %}
+                            <tr {% if order.status == 2 %} class="table-info"
+                                {% elif order.status == 3 %} class="table-success"
+                                {% elif order.status == 0 %} class="table-active"
+                                {% endif %}>
+                                <th scope="row">{{ order.id }}</th>
+                                <td>{{ order.get_status_display }}</td>
+                                <td>{{ order.time_created|date }}</td>
+                                <td>${{ order.basket_history.total_sum|intcomma }}</td>
                                 <td>
                                     <a href="{% url 'orders:order-info' %}">View</a>
                                 </td>
                             </tr>
-                            <tr class="table-success">
-                                <th scope="row">2</th>
-                                <td>Delivered</td>
-                                <td>Jul 16, 2021</td>
-                                <td>$4,876</td>
-                                <td>
-                                    <a href="order.html">View</a>
-                                </td>
-                            </tr>
-                            <tr class="table-info">
-                                <th scope="row">3</th>
-                                <td>In Transit</td>
-                                <td>Nov 14, 2021</td>
-                                <td>$9,566</td>
-                                <td>
-                                    <a href="order.html">View</a>
-                                </td>
-                            </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
                 </div>
