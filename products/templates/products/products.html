@@ -1,6 +1,7 @@
 {% extends 'products/base.html' %}
 {% load static %}
 {% load cache %}
+{% load humanize %}
 
 {% block title %}
     {{ title }}
@@ -71,7 +72,7 @@
                             <h4 class="card-title">
                                 <a href="{% url 'products:product-info' product.slug %}">{{ product.name }}</a>
                             </h4>
-                            <h5> {{ product.price }}$</h5>
+                            <h5> {{ product.price|intcomma }}$</h5>
                             <p class="card-text">{{ product.description }}</p>
                         </div>
                         <div class="card-footer text-center">
