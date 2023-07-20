@@ -30,7 +30,7 @@
                                 <td>{{ order.time_created|date }}</td>
                                 <td>${{ order.basket_history.total_sum|intcomma }}</td>
                                 <td>
-                                    <a href="{% url 'orders:order-info' %}">View</a>
+                                    <a href="{% url 'orders:order-info' order.id %}">View</a>
                                 </td>
                             </tr>
                         {% endfor %}
