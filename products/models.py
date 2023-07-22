@@ -38,7 +38,7 @@ class Product(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.stripe_product_price_id:
-            self.stripe_product_price_id = self.create_stripe_product_price().stripe_id
+            self.stripe_product_price_id = self.create_stripe_product_price()['id']
         if not self.slug:
             self.slug = slugify(self.name)
         return super().save(*args, **kwargs)

@@ -24,6 +24,7 @@
                             <tr {% if order.status == 2 %} class="table-info"
                                 {% elif order.status == 3 %} class="table-success"
                                 {% elif order.status == 0 %} class="table-active"
+                                {% else %} class="table-secondary"
                                 {% endif %}>
                                 <th scope="row">{{ order.id }}</th>
                                 <td>{{ order.get_status_display }}</td>

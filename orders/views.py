@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from products.views import TitleMixin
 from .forms import OrderForm
 from .models import Order
+from products.models import Basket
 
 import stripe
 
@@ -33,14 +34,17 @@ class CreateOrderView(TitleMixin, CreateView):
 
     def post(self, request, *args, **kwargs):
         super(CreateOrderView, self).post(request, *args, **kwargs)
+        baskets = Basket.objects.filter(user=self.request.user)
+        line_items = []
+        for basket in baskets:
+            item = {
+                'price': basket.product.stripe_product_price_id,
+                'quantity': basket.quantity
+            }
+            line_items.append(item)
+
         checkout_session = stripe.checkout.Session.create(
-            line_items=[
-                {
-                    # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-                    'price': 'price_1NW0FDG0M7gTslJBZ9jvXPW1',
-                    'quantity': 1,
-                },
-            ],
+            line_items=line_items,
             metadata={'order_id': self.object.id},
             mode='payment',
             success_url='{}{}'.format(settings.DOMAIN_NAME, reverse('orders:success-order')),
