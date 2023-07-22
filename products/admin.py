@@ -10,7 +10,7 @@ admin.site.register(Review)
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['name', 'price', 'quantity', 'quantity']
-    fields = ['name', 'description', ('price', 'quantity'), 'image', 'category', 'slug']
+    fields = ['name', 'description', ('price', 'quantity'), 'image', 'category', 'slug', 'stripe_product_price_id']
     readonly_fields = ['description']
     search_fields = ['name']
     ordering = ['name']

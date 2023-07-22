@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import TemplateView, CreateView, ListView
 from django.urls import reverse_lazy, reverse
 from django.conf import settings
 from django.shortcuts import redirect
@@ -92,14 +92,15 @@ def fulfill_order(session):
     print("Fulfilling order")
 
 
-class OrdersView(TitleMixin, TemplateView):
+class OrderListView(TitleMixin, ListView):
     title = 'View orders'
+    queryset = Order.objects.all()
     template_name = 'orders/orders.html'
+    ordering = ('-time_created')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context['orders'] = Order.objects.filter(initiator=self.request.user)
-        return context
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(initiator=self.request.user)
 
 
 class OrderView(TitleMixin, TemplateView):
@@ -110,3 +111,4 @@ class OrderView(TitleMixin, TemplateView):
         context = super().get_context_data()
         context['order'] = Order.objects.get(id=self.kwargs['order_id'])
         return context
+

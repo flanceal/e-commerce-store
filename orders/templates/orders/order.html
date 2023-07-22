@@ -6,35 +6,40 @@
 
 {% block content %}
     <section>
-    <div class="container pt-5">
-        <div class="text-center mt-5">
-            <h1>Order #{{ order.id }}</h1>
-            <div class="orders mt-5">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Product Name</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for product in order.basket_history.purchased_products %}
-                        <tr>
-                            <th scope="row">
-                                {{ product.product_name }}
-                            </th>
-                            <td>{{ product.quantity }}</td>
-                            <td>${{ product.price }}</td>
-                            <td>${{ product.quantity|multiply:product.price }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-                <p class="float-right h4 mt-3">Total: ${{ order.basket_history.total_sum|intcomma }}</p>
+        <div class="container pt-5">
+            <div class="text-center mt-5">
+                <h1>Order #{{ order.id }}</h1>
+                <div class="orders mt-5">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Product Name</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for product in order.basket_history.purchased_products %}
+                            <tr>
+                                <th scope="row">
+                                    {{ product.product_name }}
+                                </th>
+                                <td>{{ product.quantity }}</td>
+                                <td>${{ product.price }}</td>
+                                <td>${{ product.quantity|multiply:product.price }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="d-flex justify-content-between align-items-center">
+                        {% if order.status == 0 %}
+                        <button class="btn btn-primary">Pay for Order</button>
+                        {% endif %}
+                        <p class="h4">Total: ${{ order.basket_history.total_sum|intcomma }}</p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 {% endblock %}
