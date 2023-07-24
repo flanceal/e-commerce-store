@@ -4,11 +4,12 @@ from django.conf import settings
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic.detail import DetailView
 
 from products.views import TitleMixin
 from .forms import OrderForm
 from .models import Order
-from products.models import Basket
+from products.models import Basket, BasketsQuerySet
 
 import stripe
 
@@ -35,14 +36,7 @@ class CreateOrderView(TitleMixin, CreateView):
     def post(self, request, *args, **kwargs):
         super(CreateOrderView, self).post(request, *args, **kwargs)
         baskets = Basket.objects.filter(user=self.request.user)
-        line_items = []
-        for basket in baskets:
-            item = {
-                'price': basket.product.stripe_product_price_id,
-                'quantity': basket.quantity
-            }
-            line_items.append(item)
-
+        line_items = BasketsQuerySet.stripe_products(baskets)
         checkout_session = stripe.checkout.Session.create(
             line_items=line_items,
             metadata={'order_id': self.object.id},
@@ -107,12 +101,12 @@ class OrderListView(TitleMixin, ListView):
         return queryset.filter(initiator=self.request.user)
 
 
-class OrderView(TitleMixin, TemplateView):
-    title = 'View order'
+class OrderDetailedView(DetailView):
     template_name = 'orders/order.html'
+    model = Order
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context['order'] = Order.objects.get(id=self.kwargs['order_id'])
+        context['title'] = f'Order #{self.object.id}'
         return context
 
