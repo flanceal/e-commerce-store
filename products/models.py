@@ -1,8 +1,12 @@
+import stripe
+from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 
 from users.models import User
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 # Create your models here.
@@ -24,6 +28,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=6, decimal_places=2)
     quantity = models.PositiveIntegerField(default=0)
     image = models.ImageField(upload_to='product_images')
+    stripe_product_price_id = models.CharField(max_length=128, blank=True, null=True)
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
     slug = models.SlugField(max_length=255, unique=True, default=None, null=True)
 
@@ -31,12 +36,24 @@ class Product(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
+        if not self.stripe_product_price_id:
+            self.stripe_product_price_id = self.create_stripe_product_price()['id']
         if not self.slug:
             self.slug = slugify(self.name)
         return super().save(*args, **kwargs)
 
     def get_url(self):
         return reverse("products:product-info", kwargs={"product_slug": self.slug})
+
+    def create_stripe_product_price(self):
+        stripe_product = stripe.Product.create(name=self.name)
+        stripe_product_price = stripe.Price.create(
+            currency='usd',
+            product=stripe_product['id'],
+            unit_amount=round(self.price * 100))
+        self.stripe_product_price_id = stripe_product_price['id']
+        self.save()
+        return stripe_product_price
 
 
 class BasketsQuerySet(models.QuerySet):
@@ -45,6 +62,16 @@ class BasketsQuerySet(models.QuerySet):
 
     def total_quantity(self):
         return sum(basket.quantity for basket in self)
+
+    def stripe_products(self):
+        line_items = []
+        for basket in self:
+            item = {
+                'price': basket.product.stripe_product_price_id,
+                'quantity': basket.quantity
+            }
+            line_items.append(item)
+        return line_items
 
 
 class Basket(models.Model):

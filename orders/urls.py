@@ -6,8 +6,8 @@ app_name = 'orders'
 
 urlpatterns = [
     path('create-order/', views.CreateOrderView.as_view(), name='create-order'),
-    path('all-orders/', views.OrdersView.as_view(), name='view-all-orders'),
-    path('order/<int:order_id>', views.OrderView.as_view(), name='order-info'),
-    path('success/', views.SuccessOrderView.as_view(), name='success-order'),
-    path('canceled/', views.CanceledOrderView.as_view(), name='canceled-order')
+    path('', views.OrderListView.as_view(), name='view-all-orders'),
+    path('order/<int:pk>', views.OrderDetailedView.as_view(), name='order-info'),
+    path('order-success/', views.SuccessOrderView.as_view(), name='success-order'),
+    path('order-canceled/', views.CanceledOrderView.as_view(), name='canceled-order')
 ]

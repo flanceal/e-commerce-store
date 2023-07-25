@@ -1,14 +1,14 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import HttpResponseRedirect
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.shortcuts import HttpResponseRedirect, get_object_or_404, render
+from django.urls import reverse, reverse_lazy
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
-from django.views.generic.list import ListView
-from django.urls import reverse_lazy, reverse
 
 from common.view import TitleMixin
 
-from .models import Basket, Product, ProductCategory, Review
 from .forms import ReviewForm
+from .models import Basket, Product, ProductCategory, Review
 
 
 # Create your views here.
@@ -17,24 +17,39 @@ class IndexView(TitleMixin, TemplateView):
     title = 'Store'
 
 
-class ProductListView(TitleMixin, ListView):
-    model = Product
-    template_name = 'products/products.html'
-    paginate_by = 3
-    title = 'Store - Catalog'
+def products(request):
+    products = Product.objects.all()
 
-    def get_queryset(self):
-        queryset = super(ProductListView, self).get_queryset()
-        category_id = self.kwargs.get('category_id')
-        if category_id:
-            return queryset.filter(category_id=category_id)
-        else:
-            return queryset
+    context = paginate_products(request, products)
+    context['title'] = 'All products'
+    return render(request, 'products/products.html', context)
 
-    def get_context_data(self, **kwargs):
-        context = super(ProductListView, self).get_context_data()
-        context['categories'] = ProductCategory.objects.all()
-        return context
+
+def products_by_category(request, category_id):
+    get_object_or_404(ProductCategory, id=category_id)
+
+    products = Product.objects.filter(category_id=category_id)
+
+    context = paginate_products(request, products)
+    context['title'] = ProductCategory.objects.get(id=category_id)
+    return render(request, 'products/products.html', context)
+
+
+def paginate_products(request, products):
+    paginator = Paginator(products, 3)
+    page_number = request.GET.get('page', 1)
+
+    try:
+        page_obj = paginator.get_page(page_number)
+    except EmptyPage:
+        page_obj = paginator.get_page(paginator.num_pages)
+    except PageNotAnInteger:
+        page_obj = paginator.get_page(1)
+    context = {
+        'page_obj': page_obj,
+        'categories': ProductCategory.objects.all()
+    }
+    return context
 
 
 class ProductView(TitleMixin, FormView):

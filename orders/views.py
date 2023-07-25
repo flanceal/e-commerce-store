@@ -1,15 +1,17 @@
-from django.views.generic import TemplateView, CreateView
-from django.urls import reverse_lazy, reverse
+import stripe
 from django.conf import settings
-from django.shortcuts import redirect
 from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.urls import reverse, reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import CreateView, ListView, TemplateView
+from django.views.generic.detail import DetailView
 
+from products.models import Basket, BasketsQuerySet
 from products.views import TitleMixin
+
 from .forms import OrderForm
 from .models import Order
-
-import stripe
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -33,14 +35,10 @@ class CreateOrderView(TitleMixin, CreateView):
 
     def post(self, request, *args, **kwargs):
         super(CreateOrderView, self).post(request, *args, **kwargs)
+        baskets = Basket.objects.filter(user=self.request.user)
+        line_items = BasketsQuerySet.stripe_products(baskets)
         checkout_session = stripe.checkout.Session.create(
-            line_items=[
-                {
-                    # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-                    'price': 'price_1NW0FDG0M7gTslJBZ9jvXPW1',
-                    'quantity': 1,
-                },
-            ],
+            line_items=line_items,
             metadata={'order_id': self.object.id},
             mode='payment',
             success_url='{}{}'.format(settings.DOMAIN_NAME, reverse('orders:success-order')),
@@ -92,21 +90,22 @@ def fulfill_order(session):
     print("Fulfilling order")
 
 
-class OrdersView(TitleMixin, TemplateView):
+class OrderListView(TitleMixin, ListView):
     title = 'View orders'
+    queryset = Order.objects.all()
     template_name = 'orders/orders.html'
+    ordering = ('-time_created')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context['orders'] = Order.objects.filter(initiator=self.request.user)
-        return context
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(initiator=self.request.user)
 
 
-class OrderView(TitleMixin, TemplateView):
-    title = 'View order'
+class OrderDetailedView(DetailView):
     template_name = 'orders/order.html'
+    model = Order
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context['order'] = Order.objects.get(id=self.kwargs['order_id'])
+        context['title'] = f'Order #{self.object.id}'
         return context
