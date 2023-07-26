@@ -1,7 +1,3 @@
-body {
-    padding-top: 56px;
-}
-
 .card-text {
   display: -webkit-box;
   -webkit-line-clamp: 3; /* Number of lines to show before truncating */
