@@ -16,8 +16,8 @@
     {% for basket in baskets %}
         <div class="card mb-3">
                 <div class="card-body">
-                    <a href="{% url 'products:product-info' basket.product.slug %}"><h5 class="card-title">{{ basket.product.name }}</h5></a>
-                    <p class="card-text">{{ basket.product.description }}</p>
+                    <a href="{% url 'products:product-info' basket.product.slug None %}"><h5 class="card-title">{{ basket.product.name }}</h5></a>
+                    <p class="card-text">Size {{ basket.size }}</p>
                 </div>
                 <form action=""></form>
                 <ul class="list-group list-group-flush">

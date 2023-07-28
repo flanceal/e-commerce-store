@@ -60,8 +60,10 @@ class ProductView(TitleMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         slug = self.kwargs.get('product_slug')
+        size = self.kwargs.get('product_size')
         context['product'] = Product.objects.get(slug=slug)
         context['reviews'] = Review.objects.filter(product=context['product'])
+        context['product_size'] = size
         return context
 
     def form_valid(self, form):
@@ -78,12 +80,12 @@ class ProductView(TitleMixin, FormView):
 
 
 @login_required(login_url='users:login')
-def basket_add(request, product_id):
+def basket_add(request, product_id, product_size):
     product = Product.objects.get(id=product_id)
-    baskets = Basket.objects.filter(user=request.user, product=product)
+    baskets = Basket.objects.filter(user=request.user, product=product, size=product_size)
 
     if not baskets.exists():
-        Basket.objects.create(user=request.user, product=product, quantity=1)
+        Basket.objects.create(user=request.user, product=product, quantity=1, size=product_size)
     else:
         basket = baskets.first()
         basket.quantity += 1

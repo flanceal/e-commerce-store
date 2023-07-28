@@ -39,6 +39,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'users:login' %}">Sign in <i class="fas fa-sign-in-alt"></i></a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'users:profile' user.id %}">Cart <img src="/media/icons/vecteezy_shopping-cart-icon-shopping-basket-on-transparent_19787018_516.png"
+                                                                                           alt="Cart" class="cart-icon"></a>
+                </li>
                 {% endif %}
                 {% if user.id %}
                 <li class="nav-item dropdown">

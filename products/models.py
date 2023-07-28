@@ -5,7 +5,7 @@ from django.utils.text import slugify
 from django.conf import settings
 
 from users.models import User
-from .constants import CLOTHING_SIZES, SHOE_SIZES
+from .constants import CLOTHING_SIZES, ALL_SIZES
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -25,7 +25,7 @@ class ProductCategory(models.Model):
 
 
 class ProductSize(models.Model):
-    name = models.CharField(max_length=10, choices=SHOE_SIZES + CLOTHING_SIZES, unique=True)
+    name = models.CharField(max_length=10, choices=ALL_SIZES, unique=True)
 
     def __str__(self):
         return self.name
@@ -100,6 +100,7 @@ class Basket(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     product = models.ForeignKey(to=Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0)
+    size = models.CharField(max_length=10, null=True, blank=True)
     created_timestamp = models.DateTimeField(auto_now_add=True)
     objects = BasketsQuerySet.as_manager()
 

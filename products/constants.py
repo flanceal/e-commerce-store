@@ -17,3 +17,5 @@ SHOE_SIZES = (
     ('43', '43'),
     ('44', '44'),
 )
+
+ALL_SIZES = tuple(CLOTHING_SIZES + SHOE_SIZES)

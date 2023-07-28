@@ -46,3 +46,39 @@
     background-color: #f8f8f8;
     border-top: 1px solid #ddd;
 }
+
+.bigger-size {
+    font-size: 14px;
+    color: black; /* Initial color is black */
+}
+
+/* Add button-like style to the sizes */
+.size-button {
+    background-color: white;
+    border: 2px solid #c0c0c0;
+    border-radius: 4px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Add hover effect for the buttons */
+.size-button:hover {
+    background-color: #0079fa; /* Darker shade for the hover effect */
+    color: white; /* Font color becomes white on hover */
+}
+
+/* Style for the selected size button */
+.size-button.selected {
+    background-color: #0079fa; /* Different shade of blue for the selected button */
+    color: white; /* Font color becomes white for the selected button */
+    font-size: 14px; /* Set the font size again to ensure it's applied */
+}
+
+
+
+
+
+

@@ -1,6 +1,5 @@
 {% extends 'products/base.html' %}
 {% load static %}
-{% load cache %}
 
 {% block title %}
     {{ title }}
@@ -26,14 +25,20 @@
                             <h3 class="card-title">{{ product.name }}</h3>
                             <h4>Price: ${{ product.price }}</h4>
                             <p class="card-text">{{ product.description }}</p>
-{#                            <h5>Sizes:</h5>#}
-{#                            <ul>#}
-{#                            </ul>#}
-                        </div>
+                            <h5>Sizes: </h5>
+                            <div class="d-flex">
+                                {% for size in product.sizes.all %}
+                                    <a href="{% url 'products:product-info' product.slug size.name %}" class="bigger-size">
+                                        <div class="size-button {% if size.name == product_size %}selected{% endif %} mx-1">
+                                            {{ size.name }}
+                                        </div>
+                                    </a>
+                                {% endfor %}
+                            </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="{% url 'products:basket-add' product.id%}">
+                    <a href="{% url 'products:basket-add' product.id product_size %}">
                         <button type="button" class="btn btn-outline-success">Send to Cart</button>
                     </a>
                 </div>
@@ -79,7 +84,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="reviewForm" action="{% url 'products:product-info' product.slug %}" method="post" enctype="multipart/form-data">
+                <form id="reviewForm" action="{% url 'products:product-info' product.slug None %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="reviewText">Review Text</label>
