@@ -5,6 +5,7 @@ from django.utils.text import slugify
 from django.conf import settings
 
 from users.models import User
+from .constants import CLOTHING_SIZES, SHOE_SIZES
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -23,6 +24,21 @@ class ProductCategory(models.Model):
         verbose_name_plural = 'Categories'
 
 
+class ProductSize(models.Model):
+    name = models.CharField(max_length=10, choices=SHOE_SIZES + CLOTHING_SIZES, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class ProductSizeMapping(models.Model):
+    product = models.ForeignKey(to='Product', on_delete=models.CASCADE)
+    size = models.ForeignKey(ProductSize, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.product.name} - {self.size.name}'
+
+
 class Product(models.Model):
     name = models.CharField(max_length=256)
     description = models.TextField()
@@ -31,6 +47,8 @@ class Product(models.Model):
     image = models.ImageField(upload_to='product_images')
     stripe_product_price_id = models.CharField(max_length=128, blank=True, null=True)
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
+    sizes = models.ManyToManyField(to=ProductSize, through=ProductSizeMapping, blank=True)
+
     slug = models.SlugField(max_length=255, unique=True, default=None, null=True)
 
     def __str__(self):
@@ -55,6 +73,9 @@ class Product(models.Model):
         self.stripe_product_price_id = stripe_product_price['id']
         self.save()
         return stripe_product_price
+
+    def get_size(self):
+        return ",".join([size for size in self.sizes.all()])
 
 
 class BasketsQuerySet(models.QuerySet):

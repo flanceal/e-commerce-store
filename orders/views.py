@@ -11,6 +11,7 @@ from products.views import TitleMixin
 
 from .forms import OrderForm
 from .models import Order
+
 from products.models import Basket, BasketsQuerySet
 
 stripe.api_key = settings.STRIPE_SECRET_KEY

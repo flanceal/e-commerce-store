@@ -74,11 +74,13 @@
                             <h5> {{ product.price|intcomma }}$</h5>
                             <p class="card-text">{{ product.description }}</p>
                         </div>
-                        <div class="card-footer text-center">
-                            <a class="btn btn-outline-success" href="{% url 'products:basket-add' product.id %}">
-                                Send to cart
-                            </a>
-                        </div>
+                        {% if product.sizes.all %}
+                            <div class="card-footer text-center">
+                                {% for size in product.sizes.all %}
+                                    {{ size.name }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
                 {% endfor %}
