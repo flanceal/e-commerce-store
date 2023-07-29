@@ -1,0 +1,76 @@
+{% extends 'products/base.html' %}
+
+{% load humanize %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'vendor/css/baskets.css' %}">
+{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    {% if baskets %}
+    <div class="container mt-5">
+        <div class="cart-table">
+            <div class="cart-header">
+                <div class="cart-column product-column">Product</div>
+                <div class="cart-column quantity-column">Quantity</div>
+                <div class="cart-column total-column">Total</div>
+            </div>
+            {% for basket in baskets %}
+            <div class="cart-row" data-price="{{ basket.product.price }}" data-bid="{{ basket.id }}">
+                <div class="cart-column product-column">
+                    <img src="{{ basket.product.image.url }}" class="cart-item-image" alt="{{ basket.product.name }}">
+                    <div class="cart-item-info">
+                        <a href="{% url 'products:product-info' basket.product.slug None %}" class="cart-item-name">{{ basket.product.name }}</a>
+                        <p class="cart-item-size">Size {{ basket.size }}</p>
+                        <p class="cart-item-price">{{ basket.product.price|intcomma }}$</p>
+                    </div>
+                </div>
+                <div class="cart-column quantity-column">
+                    <div class="cart-item-quantity">
+                        <span class="quantity-value">{{ basket.quantity }}</span>
+                    </div>
+                </div>
+                <div class="cart-column total-column">
+                    <span class="cart-item-total" id="total-basket-price">{{ basket.sum|intcomma }}$</span>
+                    <a href="{% url 'products:basket-remove' basket.id %}" class="text-danger cart-item-remove">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="card mb-3">
+            <div class="card-footer">
+                <p class="float-left">Total</p>
+                <h4 class="float-right" id="total-cart-price">{{ baskets.total_sum|intcomma }}$</h4>
+            </div>
+        </div>
+        <a class="btn btn-success btn-lg btn-checkout float-right" href="{% url 'orders:create-order' %}">Checkout</a>
+    </div>
+    {% else %}
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-lg-12 mt-3 text-center">
+                    <h4 class="mb-3">
+                        Basket is empty
+                    </h4>
+                    <a class="btn btn-primary btn-lg" href="{% url 'products:all-products' %}">Start shopping</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% else %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-12 mt-3 text-center">
+                <h4 class="mb-3">
+                    You need to be authenticated to view your cart.
+                </h4>
+                <a class="btn btn-primary btn-lg" href="{% url 'users:login' %}">Log in</a>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

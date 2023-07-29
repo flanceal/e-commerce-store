@@ -1,12 +1,12 @@
 import stripe
+from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
-from django.conf import settings
 
 from users.models import User
-from .constants import CLOTHING_SIZES, ALL_SIZES
 
+from .constants import ALL_SIZES
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -81,9 +81,6 @@ class Product(models.Model):
 class BasketsQuerySet(models.QuerySet):
     def total_sum(self):
         return sum(basket.sum() for basket in self)
-
-    def total_quantity(self):
-        return sum(basket.quantity for basket in self)
 
     def stripe_products(self):
         line_items = []

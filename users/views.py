@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.messages.views import SuccessMessageMixin
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView
@@ -60,10 +60,12 @@ class UserProfileView(TitleMixin, SuccessMessageMixin, UpdateView):
     def get_success_url(self):
         return reverse_lazy('users:profile', args=[self.object.id])
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context['baskets'] = Basket.objects.filter(user=self.object)
-        return context
+
+def cart(request):
+    if not request.user.is_authenticated:
+        return render(request, 'users/cart.html')
+    baskets = Basket.objects.filter(user=request.user)
+    return render(request, 'users/cart.html', {'baskets': baskets})
 
 
 class UserLogoutView(LogoutView):

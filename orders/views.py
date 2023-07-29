@@ -7,12 +7,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, ListView, TemplateView
 from django.views.generic.detail import DetailView
 
+from products.models import Basket, BasketsQuerySet
 from products.views import TitleMixin
 
 from .forms import OrderForm
 from .models import Order
-
-from products.models import Basket, BasketsQuerySet
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -110,4 +109,3 @@ class OrderDetailedView(DetailView):
         context = super().get_context_data()
         context['title'] = f'Order #{self.object.id}'
         return context
-
