@@ -62,7 +62,7 @@ class ProductView(TitleMixin, FormView):
         slug = self.kwargs.get('product_slug')
         size = self.kwargs.get('product_size')
         context['product'] = Product.objects.get(slug=slug)
-        context['reviews'] = Review.objects.filter(product=context['product'])
+        context['reviews'] = Review.objects.filter(product=context['product']).order_by('-created_timestamp')
         context['product_size'] = size
         return context
 
@@ -76,7 +76,7 @@ class ProductView(TitleMixin, FormView):
             username=self.request.user.username
         )
         review.save()
-        return HttpResponseRedirect(reverse('products:product-info', args=[product.slug]))
+        return HttpResponseRedirect(reverse('products:product-info', args=[product.slug, None]))
 
 
 @login_required(login_url='users:login')

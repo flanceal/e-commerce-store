@@ -39,12 +39,16 @@ class ProductSizeMapping(models.Model):
         return f'{self.product.name} - {self.size.name}'
 
 
+class ProductFile(models.Model):
+    image = models.FileField(upload_to="product_images")
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+
+
 class Product(models.Model):
     name = models.CharField(max_length=256)
     description = models.TextField()
     price = models.DecimalField(max_digits=6, decimal_places=2)
     quantity = models.PositiveIntegerField(default=0)
-    image = models.ImageField(upload_to='product_images')
     stripe_product_price_id = models.CharField(max_length=128, blank=True, null=True)
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
     sizes = models.ManyToManyField(to=ProductSize, through=ProductSizeMapping, blank=True)
@@ -76,6 +80,9 @@ class Product(models.Model):
 
     def get_size(self):
         return ",".join([size for size in self.sizes.all()])
+
+    def images(self):
+        return ProductFile.objects.filter(product=self)
 
 
 class BasketsQuerySet(models.QuerySet):

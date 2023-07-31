@@ -64,7 +64,7 @@
                     <div class="card h-100">
                         <a href="{% url 'products:product-info' product.slug None %}">
                             <img class="card-img-top"
-                                 src="{{ product.image.url  }}"
+                                 src="{{ product.images.first.image.url }}"
                                  alt="">
                         </a>
                         <div class="card-body">

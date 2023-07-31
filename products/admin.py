@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from .models import (Basket, Product, ProductCategory, ProductSize,
-                     ProductSizeMapping, Review)
+from .models import (Basket, Product, ProductCategory, ProductFile,
+                     ProductSize, ProductSizeMapping, Review)
 
 # Register your models here.
 admin.site.register(ProductCategory)
@@ -13,15 +13,21 @@ class ProductSizeMappingInline(admin.TabularInline):
     model = ProductSizeMapping
 
 
-@admin.register(Product)
+class ProductFileInline(admin.TabularInline):
+    model = ProductFile
+
+
 class ProductAdmin(admin.ModelAdmin):
+    inlines = [
+        ProductFileInline,
+        ProductSizeMappingInline
+    ]
     list_display = ['name', 'price', 'quantity', 'quantity']
-    fields = ['name', 'description', ('price', 'quantity'), 'image',
+    fields = ['name', 'description', ('price', 'quantity'),
               'category', 'slug', 'stripe_product_price_id']
     readonly_fields = ['description']
     search_fields = ['name']
     ordering = ['name']
-    inlines = [ProductSizeMappingInline]
 
 
 class BasketAdmin(admin.TabularInline):
@@ -31,3 +37,4 @@ class BasketAdmin(admin.TabularInline):
 
 
 admin.site.register(ProductSizeMapping)
+admin.site.register(Product, ProductAdmin)

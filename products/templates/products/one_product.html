@@ -17,9 +17,15 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4">
-                            <img class="card-img-top"
-                                 src="{{ product.image.url }}"
-                                 alt="">
+                            <div class="product-image-container">
+                                <div class="product-image-wrapper">
+                                    <div class="arrow left-arrow">&#10094;</div>
+                                    <img class="card-img-top current-image"
+                                         src="{{ product.images.1.url }}"
+                                         alt="">
+                                    <div class="arrow right-arrow">&#10095;</div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-8">
                             <h3 class="card-title">{{ product.name }}</h3>
@@ -107,4 +113,45 @@
     </div>
     <!-- /.container -->
 </footer>
+{% endblock %}
+
+{% block scripts %}
+<!-- ... (previous code) ... -->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const images = [  <!-- Create an array of image URLs -->
+            {% for image in product.images.all %}
+                "{{ image.image.url }}",
+            {% endfor %}
+        ];
+
+        let currentImageIndex = 0;
+        const productImage = document.querySelector(".current-image");
+        const leftArrow = document.querySelector(".left-arrow");
+        const rightArrow = document.querySelector(".right-arrow");
+
+        function updateImage() {
+            productImage.src = images[currentImageIndex];
+        }
+
+        leftArrow.addEventListener("click", function () {
+            currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+            updateImage();
+        });
+
+        rightArrow.addEventListener("click", function () {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            updateImage();
+        });
+
+        updateImage(); // Call the function to display the first image
+    });
+
+    $('#reviewModal').on('show.bs.modal', function () {
+        // Update the form action URL dynamically based on the current page URL
+        var currentUrl = window.location.href;
+        $('#reviewForm').attr('action', currentUrl);
+    });
+</script>
 {% endblock %}

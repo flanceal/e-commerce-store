@@ -93,13 +93,6 @@
 
 <!-- Custom script for showing the review modal -->
 {% block scripts %}
-<script>
-    $('#reviewModal').on('show.bs.modal', function () {
-        // Update the form action URL dynamically based on the current page URL
-        var currentUrl = window.location.href;
-        $('#reviewForm').attr('action', currentUrl);
-    });
-</script>
 {% endblock %}
 
 </body>
