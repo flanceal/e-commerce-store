@@ -1,120 +1,169 @@
-.card {
+/* Styles for product information section */
+.card-title {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    font-size: 16px;
+    color: #666;
     margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+/* Styles for the sizes section */
+.d-flex {
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.size-button {
+    font-size: 14px;
+    color: #666;
+    border: 2px solid #ddd;
+    border-radius: 20px;
+    padding: 8px 16px;
+    margin: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.size-button:hover {
+    background-color: #1abc9c;
+    color: white;
+    border-color: #1abc9c;
+}
+
+.selected {
+    background-color: #1abc9c;
+    color: white;
+    border-color: #1abc9c;
+}
+
+/* Styles for the "Send to Cart" button */
+.card-footer {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: flex-end;
+    border-top: 1px solid #ddd;
+}
+
+.btn-send-to-cart {
+    font-size: 16px;
+    color: #1abc9c;
+    padding: 10px 20px;
+    border: 2px solid #1abc9c;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.btn-send-to-cart:hover {
+    background-color: #1abc9c;
+    color: white;
+}
+
+/* Styles for the reviews section */
+.card-outline-secondary {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: none;
+    border-radius: 10px;
+}
+
+.card-header {
+    font-size: 20px;
+    color: #333;
+    padding: 15px 20px;
+    background-color: #f2f2f2;
+    border-radius: 10px 10px 0 0;
 }
 
 .card-body {
     padding: 20px;
 }
 
-.card-footer {
-    padding: 10px;
-}
-
-.card-title {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.card-text {
+.review-text {
     font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
 }
 
-.text-muted {
-    font-size: 12px;
+.review-author {
+    font-size: 14px;
+    color: #777;
 }
 
-.btn {
-    font-size: 16px;
-    padding: 10px 20px;
+.review-date {
+    font-size: 14px;
+    color: #777;
 }
 
+/* Center the "Basket is empty" message and the "Start shopping" button */
+.col-lg-12.text-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.col-lg-12.text-center .btn {
+    margin-top: 10px;
+}
+
+/* Remove default button styles */
+button {
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+/* Responsive styles for smaller screens */
+@media (max-width: 767px) {
+    .product-image-wrapper {
+        max-width: 100%;
+    }
+}
+
+/* Styles for product image gallery arrows */
 .product-image-container {
     position: relative;
-    overflow: hidden;
+    max-width: 500px;
+    margin: 0 auto;
 }
 
 .product-image-wrapper {
     position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-.product-image-wrapper img {
-    width: 100%;
-    height: auto;
+    overflow: hidden;
+    border-radius: 8px;
 }
 
 .arrow {
     position: absolute;
     top: 50%;
-    font-size: 30px;
-    padding: 5px;
-    background-color: rgba(255, 255, 255, 0.5);
+    font-size: 28px;
+    color: #fff;
+    padding: 10px;
     border-radius: 50%;
-    z-index: 1;
     cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
+    transition: background-color 0.2s;
+}
+
+.arrow:hover {
 }
 
 .left-arrow {
-    left: 0;
+    left: 10px;
 }
 
 .right-arrow {
-    right: 0;
+    right: 10px;
 }
 
-.card {
-    background-color: #f8f8f8;
-    border: 1px solid #ddd;
+/* Styles for the price section */
+.product-price {
+    font-size: 20px;
+    color: #1abc9c;
+    font-weight: bold;
+    margin-bottom: 10px;
 }
-
-.card-header {
-    background-color: #f8f8f8;
-    border-bottom: 1px solid #ddd;
-}
-
-.card-body {
-    background-color: #fff;
-}
-
-.card-footer {
-    background-color: #f8f8f8;
-    border-top: 1px solid #ddd;
-}
-
-.bigger-size {
-    font-size: 14px;
-    color: black; /* Initial color is black */
-}
-
-/* Add button-like style to the sizes */
-.size-button {
-    background-color: white;
-    border: 2px solid #c0c0c0;
-    border-radius: 4px;
-    padding: 4px 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
-    display: inline-flex;
-    align-items: center;
-}
-
-/* Add hover effect for the buttons */
-.size-button:hover {
-    background-color: #0079fa; /* Darker shade for the hover effect */
-    color: white; /* Font color becomes white on hover */
-}
-
-/* Style for the selected size button */
-.size-button.selected {
-    background-color: #0079fa; /* Different shade of blue for the selected button */
-    color: white; /* Font color becomes white for the selected button */
-    font-size: 14px; /* Set the font size again to ensure it's applied */
-}
-
-
-
-
-
-

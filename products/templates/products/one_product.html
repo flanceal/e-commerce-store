@@ -29,7 +29,7 @@
                         </div>
                         <div class="col-md-8">
                             <h3 class="card-title">{{ product.name }}</h3>
-                            <h4>Price: ${{ product.price }}</h4>
+                            <h4 class="product-price">${{ product.price }}</h4>
                             <p class="card-text">{{ product.description }}</p>
                             <h5>Sizes: </h5>
                             <div class="d-flex">
@@ -41,6 +41,7 @@
                                     </a>
                                 {% endfor %}
                             </div>
+                        </div>
                     </div>
                 </div>
                 <div class="card-footer">

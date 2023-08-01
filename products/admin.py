@@ -25,7 +25,6 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ['name', 'price', 'quantity', 'quantity']
     fields = ['name', 'description', ('price', 'quantity'),
               'category', 'slug', 'stripe_product_price_id']
-    readonly_fields = ['description']
     search_fields = ['name']
     ordering = ['name']
 

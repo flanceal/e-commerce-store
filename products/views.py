@@ -36,7 +36,7 @@ def products_by_category(request, category_id):
 
 
 def paginate_products(request, products):
-    paginator = Paginator(products, 3)
+    paginator = Paginator(products, 6)
     page_number = request.GET.get('page', 1)
 
     try:
@@ -56,6 +56,7 @@ class ProductView(TitleMixin, FormView):
     template_name = "products/one_product.html"
     form_class = ReviewForm
     success_url = reverse_lazy('products:product-info')
+    success_message = 'Added to the Cart'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()

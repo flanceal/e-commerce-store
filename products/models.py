@@ -25,7 +25,7 @@ class ProductCategory(models.Model):
 
 
 class ProductSize(models.Model):
-    name = models.CharField(max_length=10, choices=ALL_SIZES, unique=True)
+    name = models.CharField(max_length=10, choices=ALL_SIZES)
 
     def __str__(self):
         return self.name
@@ -53,7 +53,7 @@ class Product(models.Model):
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
     sizes = models.ManyToManyField(to=ProductSize, through=ProductSizeMapping, blank=True)
 
-    slug = models.SlugField(max_length=255, unique=True, default=None, null=True)
+    slug = models.SlugField(max_length=255, unique=True, default=None, null=True, blank=True)
 
     def __str__(self):
         return self.name
