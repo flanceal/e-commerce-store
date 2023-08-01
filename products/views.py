@@ -4,6 +4,7 @@ from django.shortcuts import HttpResponseRedirect, get_object_or_404, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
+from django.contrib import messages
 
 from common.view import TitleMixin
 
@@ -56,7 +57,6 @@ class ProductView(TitleMixin, FormView):
     template_name = "products/one_product.html"
     form_class = ReviewForm
     success_url = reverse_lazy('products:product-info')
-    success_message = 'Added to the Cart'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
@@ -78,6 +78,11 @@ class ProductView(TitleMixin, FormView):
         )
         review.save()
         return HttpResponseRedirect(reverse('products:product-info', args=[product.slug, None]))
+
+    def get_title(self):
+        slug = self.kwargs.get('product_slug')
+        product = Product.objects.get(slug=slug)
+        return product.name
 
 
 @login_required(login_url='users:login')

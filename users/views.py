@@ -65,7 +65,7 @@ def cart(request):
     if not request.user.is_authenticated:
         return render(request, 'users/cart.html')
     baskets = Basket.objects.filter(user=request.user)
-    return render(request, 'users/cart.html', {'baskets': baskets})
+    return render(request, 'users/cart.html', {'baskets': baskets, 'title': 'Your Cart'})
 
 
 class UserLogoutView(LogoutView):

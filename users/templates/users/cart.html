@@ -3,6 +3,8 @@
 {% load humanize %}
 {% load static %}
 
+{% block title %} {{ title }} {% endblock %}
+
 {% block css %}
 <link rel="stylesheet" href="{% static 'vendor/css/baskets.css' %}">
 {% endblock %}
