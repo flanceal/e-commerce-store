@@ -10,6 +10,16 @@
 {% endblock %}
 
 {% block content %}
+<div class="messages-container">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert{% if message.tags == 'success' %} alert-success {% else %} alert-danger {% endif %}">  <!-- singular -->
+                <a class="close" data-dismiss="alert">×</a>
+                {{ message|safe }}
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
 <div class="container mt-4">
     <div class="row">
         <div class="col-lg-12">
@@ -32,26 +42,36 @@
                             <h4 class="product-price">${{ product.price }}</h4>
                             <p class="card-text">{{ product.description }}</p>
                             <div class="d-flex">
-                                {% for size in product.get_available_sizes %}
-                                    {% if size.name == 'One Size' %}
+                            {% if available_sizes %}
+                                {% for size in available_sizes %}
+                                    {% if size == 'One Size' %}
                                         <div class="one-size mx-1">
                                             <h5>One Size</h5>
                                         </div>
                                     {% else %}
                                         <a href="{% url 'products:product-info' product.slug size %}" class="bigger-size">
-                                            <div class="size-button {% if size.name == product_size %}selected{% endif %} mx-1">
+                                            <div class="size-button {% if size == product_size %}selected{% endif %} mx-1">
                                                 {{ size }}
                                             </div>
                                         </a>
                                     {% endif %}
                                 {% endfor %}
+                            {% else %}
+                                <div class="one-size mx-1">
+                                    <h5>Product is not available</h5>
+                                </div>
+                            {% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="{% url 'products:basket-add' product.id product_size %}">
-                        <button type="button" class="btn btn-outline-success">Add to Cart</button>
+                    {% if "One Size" in available_sizes %}
+                        <a href="{% url 'products:basket-add' product.id 'One Size' %}">
+                    {% elif available_sizes %}
+                        <a href="{% url 'products:basket-add' product.id product_size %}">
+                    {% endif %}
+                    <button type="button" class="btn btn-outline-success">Add to Cart</button>
                     </a>
                 </div>
             </div>

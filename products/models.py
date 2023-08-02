@@ -28,6 +28,10 @@ class ProductSizeMapping(models.Model):
         return f'{self.product.name} - {self.size.name}'
 
 
+def has_available_product_size(product, size_name):
+    return ProductSizeMapping.objects.filter(product=product, size__name=size_name, quantity__gt=0).exists()
+
+
 class ProductFile(models.Model):
     image = models.FileField(upload_to="product_images")
     product = models.ForeignKey('Product', on_delete=models.CASCADE)
@@ -69,8 +73,9 @@ class Product(models.Model):
     def get_available_sizes(self):
         available_sizes = []
         for size in self.sizes.all():
-            if ProductSizeMapping.objects.get(product=self, size=size).quantity > 0:
-                available_sizes.append(size)
+            size_name = size.name
+            if has_available_product_size(product=self, size_name=size_name):
+                available_sizes.append(size_name)
 
         return available_sizes
 
@@ -125,7 +130,7 @@ class Basket(models.Model):
     def de_json(self):
         basket_item = {
             'product_name': self.product.name,
-            'quantity': self.product.quantity,
+            'quantity': self.quantity,
             'price': float(self.product.price),
             'sum': float(self.sum())
         }

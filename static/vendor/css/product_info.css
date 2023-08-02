@@ -181,3 +181,29 @@ button {
     font-weight: bold;
     margin-bottom: 10px;
 }
+
+.messages-container {
+    text-align: center;
+    margin-top: 80px; /* Adjust this value as needed */
+}
+
+.alert {
+    max-width: 400px; /* Limit the width of messages */
+    margin: 60px auto 0; /* Center the messages vertically and horizontally */
+    padding: 15px;
+    font-size: 16px;
+}
+
+.alert .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 0;
+    font-size: 24px;
+}
+
+.alert-inner {
+    margin-top: 10px;
+}
+
+

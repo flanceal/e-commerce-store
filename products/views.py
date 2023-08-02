@@ -9,32 +9,13 @@ from django.contrib import messages
 from common.view import TitleMixin
 
 from .forms import ReviewForm
-from .models import Basket, Product, ProductCategory, Review, ProductSizeMapping
+from .models import Basket, Product, ProductCategory, Review, ProductSizeMapping, has_available_product_size
 
 
 # Create your views here.
 class IndexView(TitleMixin, TemplateView):
     template_name = 'products/index.html'
     title = 'Store'
-
-
-""""
-
-The problem:
-    each product in catalog page need to display only available sizes,
-    where quantity is greater then 0
-    
-    possible solution:
-        edit get_size method in Product model so that we can check in it which
-        sizes are available. 
-        We need to iterate through each size of product and check if its quantity
-        is greater then 0 and then add that size to available_sizes list and then return
-        return ",".join([size for size in available_sizes])
-        
-        
-        
-
-"""
 
 
 def products(request):
@@ -84,6 +65,7 @@ class ProductView(TitleMixin, FormView):
         context['product'] = Product.objects.get(slug=slug)
         context['reviews'] = Review.objects.filter(product=context['product']).order_by('-created_timestamp')
         context['product_size'] = size
+        context['available_sizes'] = context['product'].get_available_sizes()
         return context
 
     def form_valid(self, form):
@@ -106,8 +88,15 @@ class ProductView(TitleMixin, FormView):
 
 @login_required(login_url='users:login')
 def basket_add(request, product_id, product_size):
+    if product_size == 'None':
+        messages.add_message(request, messages.ERROR, "Please, Choose size of Product")
+        return HttpResponseRedirect(request.META['HTTP_REFERER'])
     product = Product.objects.get(id=product_id)
+    if not has_available_product_size(product=product, size_name=product_size):
+        messages.add_message(request, messages.ERROR, "The product with this size is not available")
+        return HttpResponseRedirect(request.META['HTTP_REFERER'])
     baskets = Basket.objects.filter(user=request.user, product=product, size=product_size)
+    mapping = ProductSizeMapping.objects.get(product=product, size__name=product_size)
 
     if not baskets.exists():
         Basket.objects.create(user=request.user, product=product, quantity=1, size=product_size)
@@ -115,11 +104,17 @@ def basket_add(request, product_id, product_size):
         basket = baskets.first()
         basket.quantity += 1
         basket.save()
+    mapping.quantity -= 1
+    mapping.save()
+    messages.add_message(request, messages.SUCCESS, f"{product.name} was added to the Cart")
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
 @login_required(login_url='users:login')
 def basket_remove(request, basket_id):
     basket = Basket.objects.get(id=basket_id)
+    mapping = ProductSizeMapping.objects.get(product=basket.product, size__name=basket.size)
+    mapping.quantity += basket.quantity
+    mapping.save()
     basket.delete()
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
