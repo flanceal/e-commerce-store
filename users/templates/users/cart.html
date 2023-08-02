@@ -25,7 +25,7 @@
                     <img src="{{ basket.product.images.first.image.url }}" class="cart-item-image" alt="{{ basket.product.name }}">
                     <div class="cart-item-info">
                         <a href="{% url 'products:product-info' basket.product.slug None %}" class="cart-item-name">{{ basket.product.name }}</a>
-                        <p class="cart-item-size">Size {{ basket.size }}</p>
+                        {% if basket.size != 'None' %} <p class="cart-item-size">Size {{ basket.size }}</p> {% endif %}
                         <p class="cart-item-price">{{ basket.product.price|intcomma }}$</p>
                     </div>
                 </div>

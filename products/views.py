@@ -9,13 +9,32 @@ from django.contrib import messages
 from common.view import TitleMixin
 
 from .forms import ReviewForm
-from .models import Basket, Product, ProductCategory, Review
+from .models import Basket, Product, ProductCategory, Review, ProductSizeMapping
 
 
 # Create your views here.
 class IndexView(TitleMixin, TemplateView):
     template_name = 'products/index.html'
     title = 'Store'
+
+
+""""
+
+The problem:
+    each product in catalog page need to display only available sizes,
+    where quantity is greater then 0
+    
+    possible solution:
+        edit get_size method in Product model so that we can check in it which
+        sizes are available. 
+        We need to iterate through each size of product and check if its quantity
+        is greater then 0 and then add that size to available_sizes list and then return
+        return ",".join([size for size in available_sizes])
+        
+        
+        
+
+"""
 
 
 def products(request):

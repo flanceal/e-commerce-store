@@ -31,14 +31,19 @@
                             <h3 class="card-title">{{ product.name }}</h3>
                             <h4 class="product-price">${{ product.price }}</h4>
                             <p class="card-text">{{ product.description }}</p>
-                            <h5>Sizes: </h5>
                             <div class="d-flex">
-                                {% for size in product.sizes.all %}
-                                    <a href="{% url 'products:product-info' product.slug size.name %}" class="bigger-size">
-                                        <div class="size-button {% if size.name == product_size %}selected{% endif %} mx-1">
-                                            {{ size.name }}
+                                {% for size in product.get_available_sizes %}
+                                    {% if size.name == 'One Size' %}
+                                        <div class="one-size mx-1">
+                                            <h5>One Size</h5>
                                         </div>
-                                    </a>
+                                    {% else %}
+                                        <a href="{% url 'products:product-info' product.slug size %}" class="bigger-size">
+                                            <div class="size-button {% if size.name == product_size %}selected{% endif %} mx-1">
+                                                {{ size }}
+                                            </div>
+                                        </a>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         </div>
@@ -46,7 +51,7 @@
                 </div>
                 <div class="card-footer">
                     <a href="{% url 'products:basket-add' product.id product_size %}">
-                        <button type="button" class="btn btn-outline-success">Send to Cart</button>
+                        <button type="button" class="btn btn-outline-success">Add to Cart</button>
                     </a>
                 </div>
             </div>

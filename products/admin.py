@@ -22,8 +22,8 @@ class ProductAdmin(admin.ModelAdmin):
         ProductFileInline,
         ProductSizeMappingInline
     ]
-    list_display = ['name', 'price', 'quantity', 'quantity']
-    fields = ['name', 'description', ('price', 'quantity'),
+    list_display = ['name', 'price']
+    fields = ['name', 'description', 'price',
               'category', 'slug', 'stripe_product_price_id']
     search_fields = ['name']
     ordering = ['name']
@@ -31,9 +31,11 @@ class ProductAdmin(admin.ModelAdmin):
 
 class BasketAdmin(admin.TabularInline):
     model = Basket
-    fields = ['product', 'quantity']
+    fields = ['product', 'size', 'quantity']
     extra = 0
 
 
 admin.site.register(ProductSizeMapping)
 admin.site.register(Product, ProductAdmin)
+
+

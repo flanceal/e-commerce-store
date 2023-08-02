@@ -52,8 +52,8 @@
                             {% if product.sizes.all %}
                                 <div class="card-footer text-center">
                                     Sizes:
-                                    {% for size in product.sizes.all %}
-                                        <span class="cart-item-size ">{{ size.name }}</span>
+                                    {% for size in product.get_available_sizes %}
+                                        <span class="cart-item-size ">{{ size }}</span>
                                     {% endfor %}
                                 </div>
                             {% endif %}

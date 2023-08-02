@@ -17,5 +17,8 @@ SHOE_SIZES = (
     ('43', '43'),
     ('44', '44'),
 )
+ACCESSORIES_SIZES = (
+    ("One Size", "ONE SIZE"),
+)
 
-ALL_SIZES = tuple(CLOTHING_SIZES + SHOE_SIZES)
+ALL_SIZES = tuple(CLOTHING_SIZES + SHOE_SIZES + ACCESSORIES_SIZES)

@@ -125,6 +125,20 @@ button {
     }
 }
 
+.one-size {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.one-size h5 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
 /* Styles for product image gallery arrows */
 .product-image-container {
     position: relative;
