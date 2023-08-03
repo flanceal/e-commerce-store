@@ -23,9 +23,7 @@
                 <h1 class="my-4">Store</h1>
                 <div class="list-group">
                     {% for category in categories %}
-                        {% if not category.is_empty %}
-                            <a href="{% url 'products:filtered_products' category.id %}" class="list-group-item">{{ category }}</a>
-                        {% endif %}
+                        <a href="{% url 'products:filtered_products' category.id %}" class="list-group-item">{{ category }}</a>
                     {% endfor %}
                 </div>
 
@@ -49,14 +47,20 @@
                                 <h5 class="card-price">{{ product.price|intcomma }}$</h5>
                                 <p class="card-text">{{ product.description }}</p>
                             </div>
-                            {% if product.sizes.all %}
-                                <div class="card-footer text-center">
-                                    Sizes:
-                                    {% for size in product.get_available_sizes %}
-                                        <span class="cart-item-size ">{{ size }}</span>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
+                            {% with available_sizes=product.available_sizes %}
+                                {% if available_sizes %}
+                                    <div class="card-footer text-center">
+                                        Sizes:
+                                        {% for size in available_sizes %}
+                                            <span class="cart-item-size ">{{ size }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <div class="card-footer text-center">
+                                        <span class="cart-item-size ">Not available</span>
+                                    </div>
+                                {% endif %}
+                            {% endwith %}
                         </div>
                     </div>
                     {% endfor %}

@@ -3,6 +3,7 @@ from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
+from django.utils.functional import cached_property
 
 from users.models import User
 
@@ -21,7 +22,7 @@ class ProductSize(models.Model):
 
 class ProductSizeMapping(models.Model):
     product = models.ForeignKey(to='Product', on_delete=models.CASCADE)
-    size = models.ForeignKey(ProductSize, on_delete=models.CASCADE)
+    size = models.ForeignKey(ProductSize, on_delete=models.CASCADE, related_name='product_mappings')
     quantity = models.PositiveIntegerField(default=0)
 
     def __str__(self):
@@ -70,15 +71,11 @@ class Product(models.Model):
         self.save()
         return stripe_product_price
 
-    def get_available_sizes(self):
-        available_sizes = []
-        for size in self.sizes.all():
-            size_name = size.name
-            if has_available_product_size(product=self, size_name=size_name):
-                available_sizes.append(size_name)
+    @property
+    def available_sizes(self):
+        return self.sizes.filter(product_mappings__quantity__gt=0).values_list('name', flat=True)
 
-        return available_sizes
-
+    @cached_property
     def images(self):
         return ProductFile.objects.filter(product=self)
 
@@ -89,9 +86,6 @@ class ProductCategory(models.Model):
 
     def __str__(self):
         return self.name
-
-    def is_empty(self):
-        return not Product.objects.filter(category=self)
 
     class Meta:
         verbose_name = 'Category'

@@ -5,6 +5,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 from django.contrib import messages
+from django.db.models import F
 
 from common.view import TitleMixin
 
@@ -27,9 +28,9 @@ def products(request):
 
 
 def products_by_category(request, category_id):
-    get_object_or_404(ProductCategory, id=category_id)
+    category = get_object_or_404(ProductCategory, id=category_id)
 
-    products = Product.objects.filter(category_id=category_id)
+    products = Product.objects.filter(category=category)
 
     context = paginate_products(request, products)
     context['title'] = ProductCategory.objects.get(id=category_id)
@@ -37,23 +38,21 @@ def products_by_category(request, category_id):
 
 
 def paginate_products(request, products):
-    paginator = Paginator(products, 6)
+    paginator = Paginator(products.select_related('category'), 6)
     page_number = request.GET.get('page', 1)
 
     try:
         page_obj = paginator.get_page(page_number)
-    except EmptyPage:
-        page_obj = paginator.get_page(paginator.num_pages)
-    except PageNotAnInteger:
+    except (EmptyPage, PageNotAnInteger):
         page_obj = paginator.get_page(1)
     context = {
         'page_obj': page_obj,
-        'categories': ProductCategory.objects.all()
+        'categories': set(product.category for product in paginator.object_list)
     }
     return context
 
 
-class ProductView(TitleMixin, FormView):
+class ProductView(FormView):
     template_name = "products/one_product.html"
     form_class = ReviewForm
     success_url = reverse_lazy('products:product-info')
@@ -62,10 +61,10 @@ class ProductView(TitleMixin, FormView):
         context = super().get_context_data()
         slug = self.kwargs.get('product_slug')
         size = self.kwargs.get('product_size')
-        context['product'] = Product.objects.get(slug=slug)
+        context['product'] = get_object_or_404(Product, slug=slug)
         context['reviews'] = Review.objects.filter(product=context['product']).order_by('-created_timestamp')
         context['product_size'] = size
-        context['available_sizes'] = context['product'].get_available_sizes()
+        context['available_sizes'] = context['product'].available_sizes
         return context
 
     def form_valid(self, form):
@@ -81,8 +80,7 @@ class ProductView(TitleMixin, FormView):
         return HttpResponseRedirect(reverse('products:product-info', args=[product.slug, None]))
 
     def get_title(self):
-        slug = self.kwargs.get('product_slug')
-        product = Product.objects.get(slug=slug)
+        product = self.get_context_data()['product']
         return product.name
 
 
@@ -91,10 +89,13 @@ def basket_add(request, product_id, product_size):
     if product_size == 'None':
         messages.add_message(request, messages.ERROR, "Please, Choose size of Product")
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
-    product = Product.objects.get(id=product_id)
+
+    product = get_object_or_404(Product, id=product_id)
+
     if not has_available_product_size(product=product, size_name=product_size):
         messages.add_message(request, messages.ERROR, "The product with this size is not available")
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
     baskets = Basket.objects.filter(user=request.user, product=product, size=product_size)
     mapping = ProductSizeMapping.objects.get(product=product, size__name=product_size)
 
@@ -102,9 +103,11 @@ def basket_add(request, product_id, product_size):
         Basket.objects.create(user=request.user, product=product, quantity=1, size=product_size)
     else:
         basket = baskets.first()
-        basket.quantity += 1
+        basket.quantity = F('quantity') + 1
         basket.save()
-    mapping.quantity -= 1
+
+    # decreasing product quantity by one
+    mapping.quantity = F('quantity') - 1
     mapping.save()
     messages.add_message(request, messages.SUCCESS, f"{product.name} was added to the Cart")
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
@@ -112,9 +115,9 @@ def basket_add(request, product_id, product_size):
 
 @login_required(login_url='users:login')
 def basket_remove(request, basket_id):
-    basket = Basket.objects.get(id=basket_id)
-    mapping = ProductSizeMapping.objects.get(product=basket.product, size__name=basket.size)
-    mapping.quantity += basket.quantity
+    basket = get_object_or_404(Basket, id=basket_id)
+    mapping = get_object_or_404(ProductSizeMapping, product=basket.product, size__name=basket.size)
+    mapping.quantity = F('quantity') + basket.quantity
     mapping.save()
     basket.delete()
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
