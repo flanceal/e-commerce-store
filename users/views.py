@@ -20,6 +20,9 @@ class UserLoginView(TitleMixin, SuccessMessageMixin, LoginView):
     title = 'Store - Login'
 
     def get_success_url(self):
+        previous_page = self.request.session.get('previous_page')
+        if previous_page:
+            return previous_page
         return reverse_lazy('index')
 
     def form_valid(self, form):
@@ -43,11 +46,6 @@ class UserRegistrationView(TitleMixin, SuccessMessageMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         return context
-
-
-def _get_form(request, formcls, prefix):
-    data = request.POST if prefix in request.POST else None
-    return formcls(data, prefix=prefix)
 
 
 class UserProfileView(TitleMixin, SuccessMessageMixin, UpdateView):

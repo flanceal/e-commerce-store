@@ -47,7 +47,7 @@ def paginate_products(request, products):
         page_obj = paginator.get_page(1)
     context = {
         'page_obj': page_obj,
-        'categories': set(product.category for product in paginator.object_list)
+        'categories': set(category for category in ProductCategory.objects.filter(product__isnull=False))
     }
     return context
 
