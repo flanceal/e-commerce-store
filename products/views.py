@@ -6,6 +6,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 from django.contrib import messages
 from django.db.models import F
+from django.core.cache import cache
 
 from common.view import TitleMixin
 
@@ -20,8 +21,10 @@ class IndexView(TitleMixin, TemplateView):
 
 
 def products(request):
-    products = Product.objects.all()
-
+    products = cache.get('products')
+    if not products:
+        products = Product.objects.all()
+        cache.set('products', products, timeout=15)
     context = paginate_products(request, products)
     context['title'] = 'All products'
     return render(request, 'products/products.html', context)
@@ -30,7 +33,10 @@ def products(request):
 def products_by_category(request, category_id):
     category = get_object_or_404(ProductCategory, id=category_id)
 
-    products = Product.objects.filter(category=category)
+    products = cache.get(f'product_{category_id}')
+    if not products:
+        products = Product.objects.filter(category=category)
+        cache.set(f"products_{category_id}", products, 15)
 
     context = paginate_products(request, products)
     context['title'] = ProductCategory.objects.get(id=category_id)

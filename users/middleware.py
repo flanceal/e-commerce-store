@@ -1,6 +1,7 @@
 from django.shortcuts import redirect
 from django.urls import reverse
 from urllib.parse import urlparse
+from django.conf import settings
 
 
 class PreviousPageMiddleware:
@@ -8,10 +9,10 @@ class PreviousPageMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        excluded_urls = [reverse('users:login'), reverse('users:logout'), reverse('users:password-change')]
-        if not any(request.path_info == url for url in excluded_urls):
+        excluded_urls = [reverse('users:login'), reverse('users:logout'), reverse('users:password-change'), reverse('users:registration'), '/product_images/']
+        if not any(request.path_info.startswith(url) for url in excluded_urls):
             if not request.user.is_authenticated:
-                previous_page = request.META.get('HTTP_REFERER',  '/')
+                previous_page = settings.DOMAIN_NAME + request.path_info
                 parsed_url = urlparse(previous_page)
                 if parsed_url.netloc == request.get_host():
                     request.session['previous_page'] = previous_page
