@@ -1,0 +1,40 @@
+{% extends 'products/base.html' %}
+{% load humanize %}
+{% load tags %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block content %}
+    <section>
+        <div class="container pt-5">
+            <div class="text-center mt-5">
+                <h1>Order #{{ object.id }}</h1>
+                <div class="orders mt-5">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Product Name</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for product in object.basket_history.purchased_products %}
+                            <tr>
+                                <th scope="row">
+                                    {{ product.product_name }}
+                                </th>
+                                <td>{{ product.quantity }}</td>
+                                <td>${{ product.price }}</td>
+                                <td>${{ product.quantity|multiply:product.price }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                        <p class="float-right h4 mt-3">Total: ${{ object.basket_history.total_sum|intcomma }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
