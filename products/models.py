@@ -15,6 +15,7 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 # Create your models here.
 class ProductSize(models.Model):
     name = models.CharField(max_length=10, choices=ALL_SIZES)
+    size_order = models.PositiveIntegerField(unique=True, null=True)
 
     def __str__(self):
         return self.name
@@ -73,7 +74,7 @@ class Product(models.Model):
 
     @property
     def available_sizes(self):
-        return self.sizes.filter(product_mappings__quantity__gt=0).values_list('name', flat=True)
+        return self.sizes.filter(product_mappings__quantity__gt=0).values_list('name', flat=True).order_by('size_order')
 
     @cached_property
     def images(self):
