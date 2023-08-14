@@ -7,6 +7,8 @@ django-debug-toolbar==4.1.0
 django-environ==0.10.0
 django-extensions==3.2.3
 
+psycopg2-binary==2.9.7
+
 flake8==6.1.0
 isort==5.12.0
 
