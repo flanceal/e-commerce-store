@@ -1,4 +1,4 @@
-# Ecommerce Store - [fartanovprojects.space](http://fartanovprojects.space)
+# Ecommerce Store
 
 Welcome to the Ecommerce Store project! This comprehensive e-commerce solution allows you to set up an online shop for various products. It includes essential features such as a robust login system, profile management, secure payment processing (if using Stripe), a comprehensive product system, size and availability tracking, photo uploads, and an intuitive cart system. This project is production-ready, covering all the essential user needs and even some advanced features.
 
