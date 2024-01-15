@@ -64,7 +64,7 @@ Follow these steps to run the project on your local machine:
 
 ## Deployment
 
-I've successfully deployed this project using Gunicorn and Nginx on an Ubuntu server. The website domain is [fartanovprojects.space](http://fartanovprojects.space). If you want to deploy the project, especially on Ubuntu, you can rely on my deploying configurations described in the `gunicorn_conf.md` and `nginx_conf.md` files.
+I've successfully deployed this project using Gunicorn and Nginx on an Ubuntu server. If you want to deploy the project, especially on Ubuntu, you can rely on my deploying configurations described in the `gunicorn_conf.md` and `nginx_conf.md` files.
 
 ## Usage
 
