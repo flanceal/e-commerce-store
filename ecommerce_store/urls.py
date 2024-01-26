@@ -30,7 +30,8 @@ urlpatterns = [
     path("orders/", include('orders.urls', namespace='orders')),
     path("__debug__/", include("debug_toolbar.urls")),
     path('accounts/', include('allauth.urls')),
-    path('webhook/stripe/', stripe_webhook_view, name='webhook-stripe')
+    path('webhook/stripe/', stripe_webhook_view, name='webhook-stripe'),
+    path("__reload__/", include("django_browser_reload.urls")),
 ]
 
 if settings.DEBUG:

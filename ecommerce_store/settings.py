@@ -18,7 +18,6 @@ env = environ.Env(
     # set casting, default value
     DEBUG=(bool),
     SECRET_KEY=(str),
-    DOMAIN_NAME=(str),
     REDIS_HOST=(str),
     REDIS_PORT=(int),
     DATABASE_NAME=(str),
@@ -36,6 +35,7 @@ env = environ.Env(
     STRIPE_SECRET_KEY=(str),
 )
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -51,10 +51,9 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = [env('DOMAIN_NAME'), '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
-DOMAIN_NAME = env('DOMAIN_NAME')
-
+DOMAIN_NAME = 'localhost:8000'
 # Application definition§
 
 INSTALLED_APPS = [
@@ -75,6 +74,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.facebook',
     'django_extensions',
+    'tailwind',
+    'theme',
+    'django_browser_reload',
 
     'products',
     'users',
@@ -90,11 +92,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
 
     'users.middleware.PreviousPageMiddleware'
 ]
 
 ROOT_URLCONF = 'ecommerce_store.urls'
+
+TAILWIND_APP_NAME = 'theme'
 
 TEMPLATES = [
     {
@@ -211,11 +216,13 @@ AUTH_USER_MODEL = 'users.User'
 
 EMAIL_BACKEND = env('EMAIL_BACKEND')
 EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_USE_TLS = env('EMAIL_USE_TLS')
 EMAIL_PORT = env('EMAIL_PORT')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = env('EMAIL_USE_TLS')
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 
 
 # OAuth

@@ -6,6 +6,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, ListView, TemplateView
 from django.views.generic.detail import DetailView
+import logging
 
 from products.models import Basket, BasketsQuerySet
 from products.views import TitleMixin
@@ -15,6 +16,7 @@ from .models import Order
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
+logger = logging.getLogger(__name__)
 
 class SuccessOrderView(TitleMixin, TemplateView):
     title = 'Success order'
@@ -41,8 +43,8 @@ class CreateOrderView(TitleMixin, CreateView):
             line_items=line_items,
             metadata={'order_id': self.object.id},
             mode='payment',
-            success_url='https://{}{}'.format(settings.DOMAIN_NAME, reverse('orders:success-order')),
-            cancel_url='https://{}{}'.format(settings.DOMAIN_NAME, reverse('orders:canceled-order')),
+            success_url='http://{}{}'.format(settings.DOMAIN_NAME, reverse('orders:success-order')),
+            cancel_url='http://{}{}'.format(settings.DOMAIN_NAME, reverse('orders:canceled-order')),
         )
         return redirect(checkout_session.url, code=303)
 
@@ -62,9 +64,11 @@ def stripe_webhook_view(request):
             payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
         )
     except ValueError as e:
+        logger.error(f'ValueError in stripe_webhook_view: {e}')
         # Invalid payload
         return HttpResponse(status=400)
     except stripe.error.SignatureVerificationError as e:
+        logger.error(f'SignatureVerificationError in stripe_webhook_view: {e}')
         # Invalid signature
         return HttpResponse(status=400)
 
